@@ -38,7 +38,7 @@ const Home = () => {
 			zipCode: "",
 			city: "",
 			state: "",
-			country: "INDIA",
+			country: "USA",
 			email: "",
 			address1: "",
 			address2: "",
