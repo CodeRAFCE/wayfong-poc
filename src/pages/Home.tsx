@@ -966,8 +966,12 @@ const Home = () => {
 				</div>
 
 				<div className="w-full mb-4">
+					<label htmlFor="" className="font-semibold">
+						Preferred time to contact**
+					</label>
+
 					<FormGroup>
-						<div className="grid grid-cols-3 gap-2">
+						<div className="grid grid-cols-2 gap-2">
 							<FormControlLabel
 								label="9:00 AM - 11:00 AM"
 								control={
