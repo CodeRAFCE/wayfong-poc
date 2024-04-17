@@ -1,8 +1,9 @@
 export type FormProp = {
 	id?: string | null;
-	restaurant: boolean;
-	supermarket: boolean;
-	others: boolean;
+	// restaurant: boolean;
+	// supermarket: boolean;
+	// others: boolean;
+	business: string;
 	anyOtherText?: string;
 	companyName: string;
 	contactPerson: string;
