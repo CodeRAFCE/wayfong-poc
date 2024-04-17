@@ -52,12 +52,25 @@ const Lists = () => {
 				<Table sx={{minWidth: 650}} aria-label="simple table">
 					<TableHead>
 						<TableRow>
-							<TableCell>Company Name</TableCell>
-							<TableCell align="right">Contact Person</TableCell>
-							<TableCell align="right">Phone Number</TableCell>
-							<TableCell align="right">Email</TableCell>
-							<TableCell align="right">City</TableCell>
-							<TableCell align="right">State</TableCell>
+							<TableCell sx={{fontWeight: "bold"}}>#ID</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								Company Name
+							</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								Contact Person
+							</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								Phone Number
+							</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								Email
+							</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								City
+							</TableCell>
+							<TableCell sx={{fontWeight: "bold"}} align="right">
+								State
+							</TableCell>
 						</TableRow>
 					</TableHead>
 					{store ? (
@@ -96,6 +109,7 @@ const Lists = () => {
 			</TableContainer>
 
 			<Dialog
+				maxWidth={"lg"}
 				open={open}
 				onClose={handleClose}
 				aria-labelledby="alert-dialog-title"
@@ -127,8 +141,8 @@ const Lists = () => {
 
 						<Divider sx={{my: 4}} />
 
-						<div className="flex items-center gap-4">
-							<span className="font-bold">Products:</span>
+						<div className="">
+							<span className="font-semibold text-xl">Products:</span>
 							{dataById?.products ? (
 								<>
 									{dataById?.products?.map(
@@ -142,9 +156,11 @@ const Lists = () => {
 											quantity: string | number;
 										}) => (
 											<div className="flex items-center gap-4">
-												<span className="font-bold">Preferred Products: {preferredProducts}</span>
-												<span className="font-bold">Order Frequency: {orderFrequency}</span>
-												<span className="font-bold">Quantity: {quantity}</span>
+												<span className="font-bold">Preferred Products: </span>
+												{preferredProducts}
+												<span className="font-bold">Order Frequency: </span>
+												{orderFrequency}
+												<span className="font-bold">Quantity:</span> {quantity}
 											</div>
 										)
 									)}
@@ -156,10 +172,7 @@ const Lists = () => {
 					</div>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Disagree</Button>
-					<Button onClick={handleClose} autoFocus>
-						Agree
-					</Button>
+					<Button onClick={handleClose}>Close</Button>
 				</DialogActions>
 			</Dialog>
 		</div>
