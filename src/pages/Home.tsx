@@ -1,4 +1,4 @@
-import {useEffect, useId, useState} from "react";
+import {useId, useState} from "react";
 import {Controller, FormProvider, useFieldArray, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {FormProp} from "../types/form.type";
@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import {Plus, Trash} from "lucide-react";
 import usflag from "/usflag.jpg";
+
+import states from "../components/us.json";
 
 const DUMMY_DROPDOWN = ["Weekly", "Semi - Monthly", "Monthly", "Quarterly"];
 
@@ -43,7 +45,7 @@ const timeOptions = [
 const Home = () => {
 	const navigate = useNavigate();
 	const formId = useId();
-	const [statesUS, setStatesUS] = useState([]);
+	const [statesUS] = useState(states);
 	const methods = useForm<FormProp>({
 		mode: "onBlur",
 		defaultValues: {
@@ -165,35 +167,6 @@ const Home = () => {
 	// 	return "Please select at least two options"; // Validation failed
 	//   };
 	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
-	useEffect(() => {
-		const getUsStates = () => {
-			const options = {
-				method: "GET",
-				headers: {
-					"X-RapidAPI-Key": "b3e0d070afmsh543a7751331578fp14f00bjsnf76fcf609fcd",
-					"X-RapidAPI-Host": "us-states.p.rapidapi.com",
-				},
-			};
-
-			fetch("https://us-states.p.rapidapi.com/basic", options)
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error("Network response was not ok");
-					}
-					return response.json();
-				})
-				.then((data) => {
-					console.log(data);
-					setStatesUS(data);
-				})
-				.catch((error) => {
-					console.error("There was a problem with the fetch operation:", error);
-				});
-		};
-
-		getUsStates(); // Fetch data when the component mounts
-	}, []);
 
 	const handleCheckboxChange = (value: string) => {
 		// if(values.preferredTime === false){
@@ -788,9 +761,9 @@ const Home = () => {
 								},
 							}}
 						>
-							{statesUS.map(({postal, name}) => (
+							{statesUS.map(({abbreviation, name}) => (
 								<MenuItem
-									key={postal}
+									key={abbreviation}
 									value={name}
 									sx={{
 										mx: 0.5,
