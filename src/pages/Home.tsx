@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -16,12 +16,17 @@ import {
   FormGroup,
   FormHelperText,
   IconButton,
+  InputAdornment,
   MenuItem,
   Radio,
   RadioGroup,
+  Select,
   TextField,
 } from "@mui/material";
 import { Plus, Trash } from "lucide-react";
+import PhoneInput from "react-phone-input-2";
+import usflag from "/usflag.jpg"
+import "react-phone-input-2/lib/style.css";
 
 const DUMMY_DROPDOWN = ["Weekly", "Semi - Monthly", "Monthly", "Quarterly"];
 
@@ -46,6 +51,7 @@ const timeOptions = [
 const Home = () => {
   const navigate = useNavigate();
   const formId = useId();
+  const [statesUS, setStatesUS] = useState([]);
   const methods = useForm<FormProp>({
     mode: "onBlur",
     defaultValues: {
@@ -85,7 +91,6 @@ const Home = () => {
   } = methods;
 
   const values = watch();
-  console.log(values.preferredTime);
 
   const { append, remove, fields } = useFieldArray({
     name: "products",
@@ -180,17 +185,74 @@ const Home = () => {
     } else {
       setSelectedTimes([...selectedTimes, value]);
     }
+    useEffect(() => {
+      const getUsStates = () => {
+        const options = {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key":
+              "b3e0d070afmsh543a7751331578fp14f00bjsnf76fcf609fcd",
+            "X-RapidAPI-Host": "us-states.p.rapidapi.com",
+          },
+        };
 
-    // }
+        fetch("https://us-states.p.rapidapi.com/basic", options)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            setStatesUS(data);
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          });
+      };
 
-    // if (selectedTimes.includes(value)) {
-    //   setSelectedTimes(selectedTimes.filter(time => time !== value));
-    // } else {
-    //   setSelectedTimes([...selectedTimes, value]);
-    // }
+      getUsStates(); // Fetch data when the component mounts
+    }, []);
   };
 
-  console.log(selectedTimes);
+  useEffect(() => {
+    const getUsStates = () => {
+      const options = {
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Key":
+            "b3e0d070afmsh543a7751331578fp14f00bjsnf76fcf609fcd",
+          "X-RapidAPI-Host": "us-states.p.rapidapi.com",
+        },
+      };
+
+      fetch("https://us-states.p.rapidapi.com/basic", options)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setStatesUS(data);
+        })
+        .catch((error) => {
+          console.error("There was a problem with the fetch operation:", error);
+        });
+    };
+
+    getUsStates(); // Fetch data when the component mounts
+  }, []);
+
+  //   const handleGetState = () => {
+  //     console.log("handleGetState called");
+  //     getUsStates();
+  //   }
 
   return (
     <FormProvider {...methods}>
@@ -436,59 +498,69 @@ const Home = () => {
 
         {/* PHONE NUMBER */}
         <div className="w-full mb-4">
-          <Controller
-            control={control}
-            name="phone"
-            rules={{
-              required: { value: true, message: "This field is required!" },
-            }}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                type="number"
-                label="Phone Number*"
-                {...field}
-                fullWidth
-                error={!!error}
-                helperText={error?.message}
-                size="small"
-                InputProps={{
-                  className: "bg-[#FDF0E1]",
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    // Class for the border around the input field
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderWidth: "1px",
-                      transition: "border-color 0.3s", // Add transition for smooth effect
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#CA7229",
-                    },
-                    "&.Mui-focused": {
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#CA7229",
-                        borderWidth: "2px",
-                      },
+					<Controller
+						control={control}
+						name="phone"
+						rules={{
+							required: {value: true, message: "This field is required!"},
+						}}
+						render={({field, fieldState: {error}}) => (
+							<TextField
+								type="number"
+								label="Phone Number*"
+								{...field}
+								fullWidth
+								error={!!error}
+								helperText={error?.message}
+								size="small"
+								InputProps={{
+									className: "bg-[#FDF0E1]",
+									startAdornment: (
+										<InputAdornment position="start">
+											<div className="flex items-center gap-2">
+												<img src={usflag} className="h-4" /> +1
+											</div>
+											<div className="px-4">
+												<Divider orientation="vertical" flexItem sx={{backgroundColor: "gray"}} />
+											</div>
+										</InputAdornment>
+									),
+								}}
+								sx={{
+									"& .MuiOutlinedInput-root": {
+										// Class for the border around the input field
+										"& .MuiOutlinedInput-notchedOutline": {
+											borderWidth: "1px",
+											transition: "border-color 0.3s", // Add transition for smooth effect
+										},
+										"&:hover .MuiOutlinedInput-notchedOutline": {
+											borderColor: "#CA7229",
+										},
+										"&.Mui-focused": {
+											"& .MuiOutlinedInput-notchedOutline": {
+												borderColor: "#CA7229",
+												borderWidth: "2px",
+											},
 
-                      "& .MuiInputLabel-outlined": {
-                        color: "#CA7229",
-                        "&.Mui-focused": {
-                          color: "#CA7229",
-                        },
-                      },
-                    },
-                  },
+											"& .MuiInputLabel-outlined": {
+												color: "#CA7229",
+												"&.Mui-focused": {
+													color: "#CA7229",
+												},
+											},
+										},
+									},
 
-                  "& .MuiInputLabel-outlined": {
-                    "&.Mui-focused": {
-                      color: "#CA7229",
-                    },
-                  },
-                }}
-              />
-            )}
-          />
-        </div>
+									"& .MuiInputLabel-outlined": {
+										"&.Mui-focused": {
+											color: "#CA7229",
+										},
+									},
+								}}
+							/>
+						)}
+					/>
+				</div>
 
         <div className="w-full mb-4">
           <Controller
@@ -712,57 +784,113 @@ const Home = () => {
           </div>
 
           <div className="w-full mb-4">
-            <Controller
-              control={control}
-              name="state"
-              rules={{
-                required: { value: true, message: "This field is required!" },
+            <TextField
+              select
+              InputLabelProps={{ shrink: true }}
+              SelectProps={{
+                native: false,
+                sx: { textTransform: "capitalize", maxHeight: "150px" },
               }}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  label="State*"
-                  {...field}
-                  fullWidth
-                  error={!!error}
-                  helperText={error?.message}
-                  size="small"
-                  InputProps={{
-                    className: "bg-[#FDF0E1]",
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderWidth: "1px",
-                        transition: "border-color 0.3s", // Add transition for smooth effect
-                      },
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#CA7229",
-                      },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+              label="State*"
+              //   {...field}
+              fullWidth
+              //   error={!!error}
+              //   helperText={error?.message}
+              defaultValue="State"
+              size="small"
+              InputProps={{
+                className: "bg-[#FDF0E1]",
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  // Class for the border around the input field
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderWidth: "1px",
+                    transition: "border-color 0.3s", // Add transition for smooth effect
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#CA7229",
+                  },
+                  "&.Mui-focused": {
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                      borderWidth: "2px",
                     },
 
                     "& .MuiInputLabel-outlined": {
+                      color: "#CA7229",
                       "&.Mui-focused": {
                         color: "#CA7229",
                       },
                     },
+                  },
+                },
+
+                "& .MuiInputLabel-outlined": {
+                  "&.Mui-focused": {
+                    color: "#CA7229",
+                  },
+                },
+              }}
+            >
+              {statesUS.map(({ postal, name }) => (
+                <MenuItem
+                  key={postal}
+                  value={name}
+                  sx={{
+                    mx: 0.5,
+                    my: 0.5,
+                    borderRadius: 0.75,
+                    typography: "body2",
+                    textTransform: "capitalize",
                   }}
-                />
-              )}
-            />
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </TextField>
+            {/* <Select
+        label="State*"
+        fullWidth
+        variant="outlined"
+        size="small"
+        defaultValue="States"
+		// onClick={handleGetState}
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderWidth: "1px",
+              transition: "border-color 0.3s",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#CA7229",
+            },
+            "&.Mui-focused": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#CA7229",
+                borderWidth: "2px",
+              },
+              "& .MuiInputLabel-outlined": {
+                color: "#CA7229",
+                "&.Mui-focused": {
+                  color: "#CA7229",
+                },
+              },
+            },
+          },
+          "& .MuiInputLabel-outlined": {
+            "&.Mui-focused": {
+              color: "#CA7229",
+            },
+          },
+        }}
+      >
+        {statesUS.map(({ postal, name }) => (
+          <MenuItem key={postal} value={name}>
+            {name}
+          </MenuItem>
+        ))}
+      </Select> */}
           </div>
 
           <div className="w-full mb-4">
@@ -1319,7 +1447,33 @@ const Home = () => {
                     />
                   </div>
                 </div>
+				{index < 1 && (
+									<>
+										<div
+											className="flex items-center justify-end gap-1 mt-4 cursor-pointer"
+											onClick={() =>
+												reset({
+													products: [{preferredProducts: "", orderFrequency: "", quantity: ""}],
+												})
+											}
+										>
+											<span className="font-semibold">Clear</span>
+											<IconButton
+												size="small"
+												sx={{
+													backgroundColor: "#D02F36",
+													"&:hover": {
+														backgroundColor: "#D02F36",
+													},
+												}}
+											>
+												<Trash className="text-white" />
+											</IconButton>
+										</div>
 
+										<Divider sx={{my: 4}} />
+									</>
+								)}
                 {index >= 1 && (
                   <>
                     <div
