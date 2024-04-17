@@ -31,9 +31,6 @@ const Lists = () => {
 
 	const [open, setOpen] = useState(false);
 	const [storageId, setStorageId] = useState<string | null>();
-	const selectedId = store?.filter(({id}: {id: string}) => storageId === id);
-
-	const dataById = selectedId[0];
 
 	const handleClickOpen = (id: string) => {
 		setOpen(true);
@@ -44,7 +41,11 @@ const Lists = () => {
 		setOpen(false);
 	};
 
-	console.log(store);
+	const selectedId = store?.filter(({id}: {id: string}) => storageId === id);
+
+	const dataById = selectedId[0];
+
+	console.log(dataById);
 
 	return (
 		<div className="max-w-screen-2xl mx-auto">

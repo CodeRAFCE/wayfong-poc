@@ -112,7 +112,7 @@ const Home = () => {
 	}: FormProp) => {
 		// local storage logic
 		const productDetails: FormProp = {
-			id: formId.slice(0, 8),
+			id: formId.slice(0, 3),
 			companyName: companyName,
 			contactPerson: contactPerson,
 			phone: phone,
