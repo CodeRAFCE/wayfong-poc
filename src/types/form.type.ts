@@ -3,6 +3,8 @@ export type FormProp = {
 	// restaurant: boolean;
 	// supermarket: boolean;
 	// others: boolean;
+	preferredTime: string[],
+	// checkboxes: boolean[];
 	business: string;
 	anyOtherText?: string;
 	companyName: string;
@@ -30,11 +32,4 @@ export type FormProp = {
 	tofu: boolean;
 	roastedMeat: boolean;
 	grocery: boolean;
-
-	morning1: boolean;
-	morning2: boolean;
-	afternoon1: boolean;
-	afternoon2: boolean;
-	evening1: boolean;
-	evening2: boolean;
 };

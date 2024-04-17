@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -34,6 +34,15 @@ const DUMMY_DROPDOWN = ["Weekly", "Semi - Monthly", "Monthly", "Quarterly"];
 // 	{label: "7:00 PM - 9:00 PM", value: "evening2"},
 // ];
 
+const timeOptions = [
+  { value: "time1", label: "9:00 AM - 11:00 AM" },
+  { value: "time2", label: "11:00 AM - 1:00 PM" },
+  { value: "time3", label: "1:00 PM - 3:00 PM" },
+  { value: "time4", label: "3:00 PM - 5:00 PM" },
+  { value: "time5", label: "5:00 PM - 7:00 PM" },
+  { value: "time6", label: "7:00 PM - 9:00 PM" },
+];
+
 const Home = () => {
   const navigate = useNavigate();
   const formId = useId();
@@ -52,9 +61,7 @@ const Home = () => {
       address2: "",
       landmark: "",
       products: [{ preferredProducts: "", orderFrequency: "", quantity: "" }],
-      // restaurant: false,
-      // supermarket: false,
-      // others: false,
+      preferredTime: [],
       business: "",
       anyOtherText: "",
       cookedFood: false,
@@ -65,27 +72,20 @@ const Home = () => {
       roastedMeat: false,
       seafood: false,
       tofu: false,
-
-      morning1: false,
-      morning2: false,
-      afternoon1: false,
-      afternoon2: false,
-      evening1: false,
-      evening2: false,
     },
   });
 
   const {
     handleSubmit,
     control,
-    formState: { isValid },
+    formState: { isValid, errors },
     watch,
     reset,
-	clearErrors,
+    clearErrors,
   } = methods;
 
   const values = watch();
-  console.log(values.business);
+  console.log(values.preferredTime);
 
   const { append, remove, fields } = useFieldArray({
     name: "products",
@@ -104,9 +104,7 @@ const Home = () => {
     email,
     country,
     products,
-    // others,
-    // restaurant,
-    // supermarket,
+    preferredTime,
     business,
     anyOtherText,
     landmark,
@@ -118,12 +116,6 @@ const Home = () => {
     roastedMeat,
     seafood,
     tofu,
-    morning1,
-    morning2,
-    afternoon1,
-    afternoon2,
-    evening1,
-    evening2,
   }: FormProp) => {
     // local storage logic
     const productDetails: FormProp = {
@@ -140,6 +132,7 @@ const Home = () => {
       email: email,
       country,
       products,
+      preferredTime,
       // others,
       // restaurant,
       // supermarket,
@@ -153,12 +146,6 @@ const Home = () => {
       roastedMeat,
       seafood,
       tofu,
-      morning1,
-      morning2,
-      afternoon1,
-      afternoon2,
-      evening1,
-      evening2,
     };
 
     // Get existing items from localStorage or initialize an empty array
@@ -175,6 +162,35 @@ const Home = () => {
     navigate("/thankyou");
     reset();
   };
+
+  //   const validateCheckboxSelection = (value) => {
+  // 	if (Array.isArray(value) && value.length >= 2) {
+  // 	  return true; // Validation passed
+  // 	}
+  // 	return "Please select at least two options"; // Validation failed
+  //   };
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+  const handleCheckboxChange = (value: string) => {
+    // if(values.preferredTime === false){
+    // preferredTime.push(value);
+    // console.log(preferredTime);
+
+    if (selectedTimes.includes(value)) {
+      setSelectedTimes(selectedTimes.filter((time) => time !== value));
+    } else {
+      setSelectedTimes([...selectedTimes, value]);
+    }
+
+    // }
+
+    // if (selectedTimes.includes(value)) {
+    //   setSelectedTimes(selectedTimes.filter(time => time !== value));
+    // } else {
+    //   setSelectedTimes([...selectedTimes, value]);
+    // }
+  };
+
+  console.log(selectedTimes);
 
   return (
     <FormProvider {...methods}>
@@ -204,13 +220,13 @@ const Home = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -255,16 +271,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-				  sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -298,72 +314,6 @@ const Home = () => {
             Business Type*:
           </label>
           <div className="grid grid-cols-2 gap-2">
-            {/* <FormControlLabel
-							label="Restaurant"
-							control={
-								<Controller
-									name={"restaurant"}
-									control={control}
-									render={({field}) => (
-										<Checkbox
-											{...field}
-											checked={field.value}
-											sx={{
-												color: "#00AA5C",
-												"&.Mui-checked": {
-													color: "#00AA5C",
-												},
-											}}
-										/>
-									)}
-								/>
-							}
-						/>
-
-						<FormControlLabel
-							label="Supermarket"
-							control={
-								<Controller
-									name={"supermarket"}
-									control={control}
-									render={({field}) => (
-										<Checkbox
-											{...field}
-											checked={field.value}
-											sx={{
-												color: "#00AA5C",
-												"&.Mui-checked": {
-													color: "#00AA5C",
-												},
-											}}
-										/>
-									)}
-								/>
-							}
-						/>
-
-						<FormControlLabel
-							label="Others"
-							control={
-								<Controller
-									name={"others"}
-									control={control}
-									render={({field}) => (
-										<Checkbox
-											{...field}
-											checked={field.value}
-											sx={{
-												color: "#00AA5C",
-												"&.Mui-checked": {
-													color: "#00AA5C",
-												},
-											}}
-										/>
-									)}
-								/>
-							}
-						/> */}
-
             <FormControl component="fieldset">
               <Controller
                 rules={{ required: true }}
@@ -374,48 +324,46 @@ const Home = () => {
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
-					  clearErrors("anyOtherText");
+                      clearErrors("anyOtherText");
                     }}
                   >
-					<div 
-				  className="grid-cols-2 gap-8 w-full"
-				  >
-                    <FormControlLabel
-                      value="restaurant"
-                      control={<Radio />}
-                      label="Restaurant"
-                      sx={{
-                        color: "#00AA5C",
-                        "&.Mui-checked": {
+                    <div className="grid-cols-2 gap-8 w-full">
+                      <FormControlLabel
+                        value="restaurant"
+                        control={<Radio />}
+                        label="Restaurant"
+                        sx={{
                           color: "#00AA5C",
-                        },
-                      }}
-                    />
-                    <FormControlLabel
-                      value="supermarket"
-                      control={<Radio />}
-                      label="Supermarket"
-                      onChange={() => field.onChange("supermarket")}
-                      sx={{
-                        color: "#00AA5C",
-                        "&.Mui-checked": {
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="supermarket"
+                        control={<Radio />}
+                        label="Supermarket"
+                        onChange={() => field.onChange("supermarket")}
+                        sx={{
                           color: "#00AA5C",
-                        },
-                      }}
-                    />
-                    <FormControlLabel
-                      value="others"
-                      control={<Radio />}
-                      label="Others"
-                      onChange={() => field.onChange("others")}
-                      sx={{
-                        color: "#00AA5C",
-                        "&.Mui-checked": {
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                      <FormControlLabel
+                        value="others"
+                        control={<Radio />}
+                        label="Others"
+                        onChange={() => field.onChange("others")}
+                        sx={{
                           color: "#00AA5C",
-                        },
-                      }}
-                    />
-					</div>
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                    </div>
                   </RadioGroup>
                 )}
               />
@@ -430,12 +378,14 @@ const Home = () => {
             control={control}
             name="anyOtherText"
             rules={{
-              required: { value: values.business !== "others" ? false : true, message: "This field is required!" },
+              required: {
+                value: values.business !== "others" ? false : true,
+                message: "This field is required!",
+              },
             }}
             render={({ field, fieldState: { error } }) => (
               <TextField
-                disabled={values.business !== "others" }
-                className="disabled:cursor-not-allowed"
+                disabled={values.business !== "others"}
                 label="Any other business type"
                 {...field}
                 fullWidth
@@ -443,39 +393,42 @@ const Home = () => {
                 helperText={error?.message}
                 size="small"
                 InputProps={{
-                  className: `${values.business !== "others"? "bg-white" : "bg-[#FDF0E1]" }`,
+                  className: `${
+                    values.business !== "others" ? "bg-black" : "bg-[#FDF0E1]"
+                  }`,
                 }}
                 sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+                  display: values.business !== "others" ? "none" : "",
+                  "& .MuiOutlinedInput-root": {
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "1px",
+                      transition: "border-color 0.3s", // Add transition for smooth effect
                     },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                        borderWidth: "2px",
+                      },
 
-                    "& .MuiInputLabel-outlined": {
-                      "&.Mui-focused": {
+                      "& .MuiInputLabel-outlined": {
                         color: "#CA7229",
+                        "&.Mui-focused": {
+                          color: "#CA7229",
+                        },
                       },
                     },
-                  }}
+                  },
+
+                  "& .MuiInputLabel-outlined": {
+                    "&.Mui-focused": {
+                      color: "#CA7229",
+                    },
+                  },
+                }}
               />
             )}
           />
@@ -501,37 +454,37 @@ const Home = () => {
                 InputProps={{
                   className: "bg-[#FDF0E1]",
                 }}
-				sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "1px",
+                      transition: "border-color 0.3s", // Add transition for smooth effect
                     },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                        borderWidth: "2px",
+                      },
 
-                    "& .MuiInputLabel-outlined": {
-                      "&.Mui-focused": {
+                      "& .MuiInputLabel-outlined": {
                         color: "#CA7229",
+                        "&.Mui-focused": {
+                          color: "#CA7229",
+                        },
                       },
                     },
-                  }}
+                  },
+
+                  "& .MuiInputLabel-outlined": {
+                    "&.Mui-focused": {
+                      color: "#CA7229",
+                    },
+                  },
+                }}
               />
             )}
           />
@@ -559,37 +512,37 @@ const Home = () => {
                 InputProps={{
                   className: "bg-[#FDF0E1]",
                 }}
-				sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "1px",
+                      transition: "border-color 0.3s", // Add transition for smooth effect
                     },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                        borderWidth: "2px",
+                      },
 
-                    "& .MuiInputLabel-outlined": {
-                      "&.Mui-focused": {
+                      "& .MuiInputLabel-outlined": {
                         color: "#CA7229",
+                        "&.Mui-focused": {
+                          color: "#CA7229",
+                        },
                       },
                     },
-                  }}
+                  },
+
+                  "& .MuiInputLabel-outlined": {
+                    "&.Mui-focused": {
+                      color: "#CA7229",
+                    },
+                  },
+                }}
               />
             )}
           />
@@ -614,36 +567,36 @@ const Home = () => {
                   className: "bg-[#FDF0E1]",
                 }}
                 sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+                  "& .MuiOutlinedInput-root": {
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "1px",
+                      transition: "border-color 0.3s", // Add transition for smooth effect
                     },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                        borderWidth: "2px",
+                      },
 
-                    "& .MuiInputLabel-outlined": {
-                      "&.Mui-focused": {
+                      "& .MuiInputLabel-outlined": {
                         color: "#CA7229",
+                        "&.Mui-focused": {
+                          color: "#CA7229",
+                        },
                       },
                     },
-                  }}
+                  },
+
+                  "& .MuiInputLabel-outlined": {
+                    "&.Mui-focused": {
+                      color: "#CA7229",
+                    },
+                  },
+                }}
               />
             )}
           />
@@ -668,36 +621,36 @@ const Home = () => {
                   className: "bg-[#FDF0E1]",
                 }}
                 sx={{
-                    "& .MuiOutlinedInput-root": {
-                      // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
-                      "&.Mui-focused": {
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#CA7229",
-                          borderWidth: "2px",
-                        },
-
-                        "& .MuiInputLabel-outlined": {
-                          color: "#CA7229",
-                          "&.Mui-focused": {
-                            color: "#CA7229",
-                          },
-                        },
-                      },
+                  "& .MuiOutlinedInput-root": {
+                    // Class for the border around the input field
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "1px",
+                      transition: "border-color 0.3s", // Add transition for smooth effect
                     },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#CA7229",
+                    },
+                    "&.Mui-focused": {
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                        borderWidth: "2px",
+                      },
 
-                    "& .MuiInputLabel-outlined": {
-                      "&.Mui-focused": {
+                      "& .MuiInputLabel-outlined": {
                         color: "#CA7229",
+                        "&.Mui-focused": {
+                          color: "#CA7229",
+                        },
                       },
                     },
-                  }}
+                  },
+
+                  "& .MuiInputLabel-outlined": {
+                    "&.Mui-focused": {
+                      color: "#CA7229",
+                    },
+                  },
+                }}
               />
             )}
           />
@@ -722,16 +675,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-				  sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -776,16 +729,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-                   sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -830,16 +783,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-                   sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -889,16 +842,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-                   sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -944,16 +897,16 @@ const Home = () => {
                   InputProps={{
                     className: "bg-[#FDF0E1]",
                   }}
-                   sx={{
+                  sx={{
                     "& .MuiOutlinedInput-root": {
                       // Class for the border around the input field
-					  "& .MuiOutlinedInput-notchedOutline": {
-						borderWidth: "1px",
-						transition: "border-color 0.3s", // Add transition for smooth effect
-					  },
-					  "&:hover .MuiOutlinedInput-notchedOutline": {
-						borderColor: "#CA7229",
-					  },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1px",
+                        transition: "border-color 0.3s", // Add transition for smooth effect
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#CA7229",
+                      },
                       "&.Mui-focused": {
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: "#CA7229",
@@ -1194,36 +1147,36 @@ const Home = () => {
                           className: "bg-[#FDF0E1]",
                         }}
                         sx={{
-							"& .MuiOutlinedInput-root": {
-							  // Class for the border around the input field
-							  "& .MuiOutlinedInput-notchedOutline": {
-								borderWidth: "1px",
-								transition: "border-color 0.3s", // Add transition for smooth effect
-							  },
-							  "&:hover .MuiOutlinedInput-notchedOutline": {
-								borderColor: "#CA7229",
-							  },
-							  "&.Mui-focused": {
-								"& .MuiOutlinedInput-notchedOutline": {
-								  borderColor: "#CA7229",
-								  borderWidth: "2px",
-								},
-		
-								"& .MuiInputLabel-outlined": {
-								  color: "#CA7229",
-								  "&.Mui-focused": {
-									color: "#CA7229",
-								  },
-								},
-							  },
-							},
-		
-							"& .MuiInputLabel-outlined": {
-							  "&.Mui-focused": {
-								color: "#CA7229",
-							  },
-							},
-						  }}
+                          "& .MuiOutlinedInput-root": {
+                            // Class for the border around the input field
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "1px",
+                              transition: "border-color 0.3s", // Add transition for smooth effect
+                            },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#CA7229",
+                            },
+                            "&.Mui-focused": {
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#CA7229",
+                                borderWidth: "2px",
+                              },
+
+                              "& .MuiInputLabel-outlined": {
+                                color: "#CA7229",
+                                "&.Mui-focused": {
+                                  color: "#CA7229",
+                                },
+                              },
+                            },
+                          },
+
+                          "& .MuiInputLabel-outlined": {
+                            "&.Mui-focused": {
+                              color: "#CA7229",
+                            },
+                          },
+                        }}
                       />
                     )}
                   />
@@ -1257,37 +1210,37 @@ const Home = () => {
                           InputProps={{
                             className: "bg-[#FDF0E1]",
                           }}
-						  sx={{
-							"& .MuiOutlinedInput-root": {
-							  // Class for the border around the input field
-							  "& .MuiOutlinedInput-notchedOutline": {
-								borderWidth: "1px",
-								transition: "border-color 0.3s", // Add transition for smooth effect
-							  },
-							  "&:hover .MuiOutlinedInput-notchedOutline": {
-								borderColor: "#CA7229",
-							  },
-							  "&.Mui-focused": {
-								"& .MuiOutlinedInput-notchedOutline": {
-								  borderColor: "#CA7229",
-								  borderWidth: "2px",
-								},
-		
-								"& .MuiInputLabel-outlined": {
-								  color: "#CA7229",
-								  "&.Mui-focused": {
-									color: "#CA7229",
-								  },
-								},
-							  },
-							},
-		
-							"& .MuiInputLabel-outlined": {
-							  "&.Mui-focused": {
-								color: "#CA7229",
-							  },
-							},
-						  }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              // Class for the border around the input field
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderWidth: "1px",
+                                transition: "border-color 0.3s", // Add transition for smooth effect
+                              },
+                              "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#CA7229",
+                              },
+                              "&.Mui-focused": {
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: "#CA7229",
+                                  borderWidth: "2px",
+                                },
+
+                                "& .MuiInputLabel-outlined": {
+                                  color: "#CA7229",
+                                  "&.Mui-focused": {
+                                    color: "#CA7229",
+                                  },
+                                },
+                              },
+                            },
+
+                            "& .MuiInputLabel-outlined": {
+                              "&.Mui-focused": {
+                                color: "#CA7229",
+                              },
+                            },
+                          }}
                         >
                           {DUMMY_DROPDOWN.map((option) => (
                             <MenuItem
@@ -1330,37 +1283,37 @@ const Home = () => {
                           InputProps={{
                             className: "bg-[#FDF0E1]",
                           }}
-						  sx={{
-							"& .MuiOutlinedInput-root": {
-							  // Class for the border around the input field
-							  "& .MuiOutlinedInput-notchedOutline": {
-								borderWidth: "1px",
-								transition: "border-color 0.3s", // Add transition for smooth effect
-							  },
-							  "&:hover .MuiOutlinedInput-notchedOutline": {
-								borderColor: "#CA7229",
-							  },
-							  "&.Mui-focused": {
-								"& .MuiOutlinedInput-notchedOutline": {
-								  borderColor: "#CA7229",
-								  borderWidth: "2px",
-								},
-		
-								"& .MuiInputLabel-outlined": {
-								  color: "#CA7229",
-								  "&.Mui-focused": {
-									color: "#CA7229",
-								  },
-								},
-							  },
-							},
-		
-							"& .MuiInputLabel-outlined": {
-							  "&.Mui-focused": {
-								color: "#CA7229",
-							  },
-							},
-						  }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              // Class for the border around the input field
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderWidth: "1px",
+                                transition: "border-color 0.3s", // Add transition for smooth effect
+                              },
+                              "&:hover .MuiOutlinedInput-notchedOutline": {
+                                borderColor: "#CA7229",
+                              },
+                              "&.Mui-focused": {
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: "#CA7229",
+                                  borderWidth: "2px",
+                                },
+
+                                "& .MuiInputLabel-outlined": {
+                                  color: "#CA7229",
+                                  "&.Mui-focused": {
+                                    color: "#CA7229",
+                                  },
+                                },
+                              },
+                            },
+
+                            "& .MuiInputLabel-outlined": {
+                              "&.Mui-focused": {
+                                color: "#CA7229",
+                              },
+                            },
+                          }}
                         />
                       )}
                     />
@@ -1424,9 +1377,49 @@ const Home = () => {
             Preferred time to contact**
           </label>
 
-          <FormGroup>
-            <div className="grid grid-cols-2 gap-2">
-              <FormControlLabel
+          {/* <FormGroup> */}
+          <div>
+            <FormControl component="fieldset">
+              <Controller
+                rules={{
+                  required: {
+                    value: selectedTimes.length > 1 ? false : true,
+                    message: "Make sure at least two checkboxes are checked!",
+                  },
+                }}
+                control={control}
+                name="preferredTime"
+                render={({ field }) => (
+                  <FormGroup {...field}>
+                    <div className="grid grid-cols-3 gap-6">
+                      {timeOptions.map((option) => (
+                        <FormControlLabel
+                          key={option.value}
+                          value={option.value}
+                          control={
+                            <Checkbox
+                              {...field}
+                              value={option.value}
+                              onChange={() =>
+                                handleCheckboxChange(option.value)
+                              }
+                            />
+                          }
+                          label={option.label}
+                          sx={{
+                            color: "#00AA5C",
+                            "&.Mui-checked": {
+                              color: "#00AA5C",
+                            },
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </FormGroup>
+                )}
+              />
+            </FormControl>
+            {/* <FormControlLabel
                 label="9:00 AM - 11:00 AM"
                 control={
                   <Controller
@@ -1446,9 +1439,9 @@ const Home = () => {
                     )}
                   />
                 }
-              />
+              /> */}
 
-              <FormControlLabel
+            {/* <FormControlLabel
                 label="11:00 AM - 1:00 PM"
                 control={
                   <Controller
@@ -1468,9 +1461,9 @@ const Home = () => {
                     )}
                   />
                 }
-              />
+              /> */}
 
-              <FormControlLabel
+            {/* <FormControlLabel
                 label="1:00 PM - 3:00 PM"
                 control={
                   <Controller
@@ -1490,11 +1483,79 @@ const Home = () => {
                     )}
                   />
                 }
+              /> */}
+            {/* <FormControlLabel
+                label="3:00 PM - 5:00 PM"
+                control={
+                  <Controller
+                    name={"afternoon2"}
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        sx={{
+                          color: "#00AA5C",
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                }
               />
-            </div>
-          </FormGroup>
+			  <FormControlLabel
+                label="5:00 PM - 7:00 PM"
+                control={
+                  <Controller
+                    name={"afternoon3"}
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        sx={{
+                          color: "#00AA5C",
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                }
+              />
+			  <FormControlLabel
+                label="7:00 PM - 9:00 PM"
+                control={
+                  <Controller
+                    name={"afternoon4"}
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        sx={{
+                          color: "#00AA5C",
+                          "&.Mui-checked": {
+                            color: "#00AA5C",
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                }
+              /> */}
+          </div>
+          {/* </FormGroup> */}
 
           <FormHelperText>**Select at least 2 slots</FormHelperText>
+          {errors.preferredTime && (
+            <FormHelperText error>
+              {errors.preferredTime.message}
+            </FormHelperText>
+          )}
         </div>
 
         <Button
