@@ -40,12 +40,12 @@ const DUMMY_DROPDOWN = ["Weekly", "Semi - Monthly", "Monthly", "Quarterly"];
 // ];
 
 const timeOptions = [
-  { value: "time1", label: "9:00 AM - 11:00 AM" },
-  { value: "time2", label: "11:00 AM - 1:00 PM" },
-  { value: "time3", label: "1:00 PM - 3:00 PM" },
-  { value: "time4", label: "3:00 PM - 5:00 PM" },
-  { value: "time5", label: "5:00 PM - 7:00 PM" },
-  { value: "time6", label: "7:00 PM - 9:00 PM" },
+  { value: "time1", label: "9 AM - 11 AM" },
+  { value: "time2", label: "11 AM - 1 PM" },
+  { value: "time3", label: "1 PM - 3 PM" },
+  { value: "time4", label: "3 PM - 5 PM" },
+  { value: "time5", label: "5 PM - 7 PM" },
+  { value: "time6", label: "7 PM - 9 PM" },
 ];
 
 const Home = () => {
