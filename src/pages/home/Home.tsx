@@ -19,6 +19,7 @@ import RHFTextField from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import {
+	DEFAULT_VALUES,
 	PAY_TERM,
 	PAY_TYPE,
 	PRODUCT_CATEGORY,
@@ -34,27 +35,7 @@ const Home = () => {
 	const formId = useId();
 	const methods = useForm<FormProp>({
 		mode: "onBlur",
-		defaultValues: {
-			companyName: "",
-			contactPerson: "",
-			phone: "",
-			zipCode: "",
-			city: "",
-			state: "",
-			country: "USA",
-			email: "",
-			address1: "",
-			address2: "",
-			landmark: "",
-			payTerm: "",
-			payType: "",
-			products: [{preferredProducts: "", orderFrequency: "", quantity: ""}],
-			checkDefaultAddress: false,
-			preferredTime: [],
-			business: "",
-			anyOtherText: "",
-			interestedProducts: [],
-		},
+		defaultValues: DEFAULT_VALUES,
 	});
 
 	const {
@@ -67,7 +48,7 @@ const Home = () => {
 	} = methods;
 
 	const values = watch();
-	console.log(values.payTerm);
+
 	useEffect(() => {
 		if (values.business !== "Others") {
 			clearErrors("anyOtherText");
@@ -170,7 +151,8 @@ const Home = () => {
 							}}
 						/>
 					</Box>
-				</div>
+        </div>
+        
 				<div className="w-full mb-4">
 					<Box sx={{width: "100%"}}>
 						<RHFSelect
@@ -432,7 +414,7 @@ const Home = () => {
 					</div>
 				</div>
 				<div className="w-full mb-4">
-					<RHFCheckbox label="Use it as my Billing Address" name="checkDefaultAddress" />
+					<RHFCheckbox rules={{}} label="Use it as my Billing Address" name="checkDefaultAddress" />
 				</div>
 				<Typography
 					variant="subtitle2"
