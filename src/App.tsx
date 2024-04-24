@@ -1,8 +1,7 @@
 import {RouterProvider, createBrowserRouter} from "react-router-dom";
-import MainLayout from "./components/layouts/MainLayout";
+import MainLayout from "./layouts/MainLayout";
 import {Home} from "./pages/home";
-import Lists from "./pages/list-page/Lists";
-import ThankYou from "./pages/ThankYou";
+import {ThankYou} from "./pages/thank-you";
 
 function App() {
 	const router = createBrowserRouter([
@@ -12,11 +11,6 @@ function App() {
 				{
 					index: true,
 					element: <Home />,
-				},
-
-				{
-					path: "/lists",
-					element: <Lists />,
 				},
 				{
 					path: "/thankyou",

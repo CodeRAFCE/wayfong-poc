@@ -3,7 +3,7 @@ import {Toaster} from "sonner";
 
 import logo from "/logo.webp";
 
-import Providers from "../Providers";
+import Providers from "../components/Providers";
 
 const MainLayout = () => {
 	return (
