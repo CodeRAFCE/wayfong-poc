@@ -1,7 +1,7 @@
 import {RouterProvider, createBrowserRouter} from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout";
-import Home from "./pages/Home";
-import Lists from "./pages/Lists";
+import {Home} from "./pages/home";
+import Lists from "./pages/list-page/Lists";
 import ThankYou from "./pages/ThankYou";
 
 function App() {

@@ -1,7 +1,5 @@
 import {useId, useState} from "react";
-import {Controller, FormProvider, useFieldArray, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import {FormProp} from "../types/form.type";
 import {
 	Button,
 	Checkbox,
@@ -17,21 +15,13 @@ import {
 	RadioGroup,
 	TextField,
 } from "@mui/material";
+import {Controller, FormProvider, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {Plus, Trash} from "lucide-react";
+import {FormProp} from "../../types/form.type";
+import states from "../../components/us.json";
 import usflag from "/usflag.jpg";
 
-import states from "../components/us.json";
-
 const DUMMY_DROPDOWN = ["Weekly", "Semi - Monthly", "Monthly", "Quarterly"];
-
-// const options = [
-// 	{label: "9:00 AM - 11:00 AM", value: "morning1"},
-// 	{label: "11:00 AM - 1:00 PM", value: "morning2"},
-// 	{label: "1:00 PM - 3:00 PM", value: "afternoon1"},
-// 	{label: "3:00 PM - 5:00 PM", value: "afternoon2"},
-// 	{label: "5:00 PM - 7:00 PM", value: "evening1"},
-// 	{label: "7:00 PM - 9:00 PM", value: "evening2"},
-// ];
 
 const timeOptions = [
 	{value: "time1", label: "9 AM - 11 AM"},
@@ -43,9 +33,10 @@ const timeOptions = [
 ];
 
 const Home = () => {
+	const [statesUS] = useState(states);
+	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
 	const navigate = useNavigate();
 	const formId = useId();
-	const [statesUS] = useState(states);
 	const methods = useForm<FormProp>({
 		mode: "onBlur",
 		defaultValues: {
@@ -91,7 +82,7 @@ const Home = () => {
 		control,
 	});
 
-	const onSubmit = async ({
+	const handleOnSubmit: SubmitHandler<FormProp> = async ({
 		companyName,
 		city,
 		contactPerson,
@@ -115,9 +106,8 @@ const Home = () => {
 		roastedMeat,
 		seafood,
 		tofu,
-	}: FormProp) => {
-		// local storage logic
-		const productDetails: FormProp = {
+	}) => {
+		const productDetails = {
 			id: formId.slice(0, 3),
 			companyName: companyName,
 			contactPerson: contactPerson,
@@ -132,9 +122,6 @@ const Home = () => {
 			country,
 			products,
 			preferredTime,
-			// others,
-			// restaurant,
-			// supermarket,
 			business,
 			anyOtherText,
 			cookedFood,
@@ -147,46 +134,26 @@ const Home = () => {
 			tofu,
 		};
 
-		// Get existing items from localStorage or initialize an empty array
 		const itemsInCompare: FormProp[] = JSON.parse(localStorage.getItem("itemsInCompare") || "[]");
 
-		// Push the new form data object into the array
 		itemsInCompare.push(productDetails);
 
-		// Store the updated array back into localStorage
 		localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
-
 		navigate("/thankyou");
 		reset();
 	};
 
-	//   const validateCheckboxSelection = (value) => {
-	// 	if (Array.isArray(value) && value.length >= 2) {
-	// 	  return true; // Validation passed
-	// 	}
-	// 	return "Please select at least two options"; // Validation failed
-	//   };
-	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
 	const handleCheckboxChange = (value: string) => {
-		// if(values.preferredTime === false){
-		// preferredTime.push(value);
-		// console.log(preferredTime);
-
 		if (selectedTimes.includes(value)) {
 			setSelectedTimes(selectedTimes.filter((time) => time !== value));
 		} else {
 			setSelectedTimes([...selectedTimes, value]);
 		}
 	};
-	//   const handleGetState = () => {
-	//     console.log("handleGetState called");
-	//     getUsStates();
-	//   }
 
 	return (
 		<FormProvider {...methods}>
-			<form onSubmit={handleSubmit(onSubmit)} className="max-w-screen-md mx-auto p-4">
+			<form onSubmit={handleSubmit(handleOnSubmit)} className="max-w-screen-md mx-auto p-4">
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-4">
 					<div className="w-full">
 						<Controller
@@ -208,10 +175,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -262,10 +228,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -386,10 +351,9 @@ const Home = () => {
 								sx={{
 									display: values.business !== "others" ? "none" : "",
 									"& .MuiOutlinedInput-root": {
-										// Class for the border around the input field
 										"& .MuiOutlinedInput-notchedOutline": {
 											borderWidth: "1px",
-											transition: "border-color 0.3s", // Add transition for smooth effect
+											transition: "border-color 0.3s",
 										},
 										"&:hover .MuiOutlinedInput-notchedOutline": {
 											borderColor: "#CA7229",
@@ -456,10 +420,9 @@ const Home = () => {
 								}}
 								sx={{
 									"& .MuiOutlinedInput-root": {
-										// Class for the border around the input field
 										"& .MuiOutlinedInput-notchedOutline": {
 											borderWidth: "1px",
-											transition: "border-color 0.3s", // Add transition for smooth effect
+											transition: "border-color 0.3s",
 										},
 										"&:hover .MuiOutlinedInput-notchedOutline": {
 											borderColor: "#CA7229",
@@ -514,10 +477,9 @@ const Home = () => {
 								}}
 								sx={{
 									"& .MuiOutlinedInput-root": {
-										// Class for the border around the input field
 										"& .MuiOutlinedInput-notchedOutline": {
 											borderWidth: "1px",
-											transition: "border-color 0.3s", // Add transition for smooth effect
+											transition: "border-color 0.3s",
 										},
 										"&:hover .MuiOutlinedInput-notchedOutline": {
 											borderColor: "#CA7229",
@@ -568,10 +530,9 @@ const Home = () => {
 								}}
 								sx={{
 									"& .MuiOutlinedInput-root": {
-										// Class for the border around the input field
 										"& .MuiOutlinedInput-notchedOutline": {
 											borderWidth: "1px",
-											transition: "border-color 0.3s", // Add transition for smooth effect
+											transition: "border-color 0.3s",
 										},
 										"&:hover .MuiOutlinedInput-notchedOutline": {
 											borderColor: "#CA7229",
@@ -622,10 +583,9 @@ const Home = () => {
 								}}
 								sx={{
 									"& .MuiOutlinedInput-root": {
-										// Class for the border around the input field
 										"& .MuiOutlinedInput-notchedOutline": {
 											borderWidth: "1px",
-											transition: "border-color 0.3s", // Add transition for smooth effect
+											transition: "border-color 0.3s",
 										},
 										"&:hover .MuiOutlinedInput-notchedOutline": {
 											borderColor: "#CA7229",
@@ -677,10 +637,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -731,10 +690,9 @@ const Home = () => {
 							}}
 							sx={{
 								"& .MuiOutlinedInput-root": {
-									// Class for the border around the input field
 									"& .MuiOutlinedInput-notchedOutline": {
 										borderWidth: "1px",
-										transition: "border-color 0.3s", // Add transition for smooth effect
+										transition: "border-color 0.3s",
 									},
 									"&:hover .MuiOutlinedInput-notchedOutline": {
 										borderColor: "#CA7229",
@@ -841,10 +799,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -900,10 +857,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -955,10 +911,9 @@ const Home = () => {
 									}}
 									sx={{
 										"& .MuiOutlinedInput-root": {
-											// Class for the border around the input field
 											"& .MuiOutlinedInput-notchedOutline": {
 												borderWidth: "1px",
-												transition: "border-color 0.3s", // Add transition for smooth effect
+												transition: "border-color 0.3s",
 											},
 											"&:hover .MuiOutlinedInput-notchedOutline": {
 												borderColor: "#CA7229",
@@ -1204,10 +1159,9 @@ const Home = () => {
 												}}
 												sx={{
 													"& .MuiOutlinedInput-root": {
-														// Class for the border around the input field
 														"& .MuiOutlinedInput-notchedOutline": {
 															borderWidth: "1px",
-															transition: "border-color 0.3s", // Add transition for smooth effect
+															transition: "border-color 0.3s",
 														},
 														"&:hover .MuiOutlinedInput-notchedOutline": {
 															borderColor: "#CA7229",
@@ -1268,10 +1222,9 @@ const Home = () => {
 													}}
 													sx={{
 														"& .MuiOutlinedInput-root": {
-															// Class for the border around the input field
 															"& .MuiOutlinedInput-notchedOutline": {
 																borderWidth: "1px",
-																transition: "border-color 0.3s", // Add transition for smooth effect
+																transition: "border-color 0.3s",
 															},
 															"&:hover .MuiOutlinedInput-notchedOutline": {
 																borderColor: "#CA7229",
@@ -1341,10 +1294,9 @@ const Home = () => {
 													}}
 													sx={{
 														"& .MuiOutlinedInput-root": {
-															// Class for the border around the input field
 															"& .MuiOutlinedInput-notchedOutline": {
 																borderWidth: "1px",
-																transition: "border-color 0.3s", // Add transition for smooth effect
+																transition: "border-color 0.3s",
 															},
 															"&:hover .MuiOutlinedInput-notchedOutline": {
 																borderColor: "#CA7229",

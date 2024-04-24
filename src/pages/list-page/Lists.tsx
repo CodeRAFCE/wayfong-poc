@@ -14,6 +14,7 @@ import {
 	TableRow,
 } from "@mui/material";
 import {useState} from "react";
+import {PreferredProductsType} from "../../types/form.type";
 
 type StoreProps = {
 	companyName: string;
@@ -23,11 +24,14 @@ type StoreProps = {
 	city: string;
 	state: string;
 	id: string;
+	address: string;
+	products: PreferredProductsType[];
+	zipCode: number;
 };
 
 const Lists = () => {
 	const storedData = localStorage.getItem("itemsInCompare");
-	const store = storedData ? JSON.parse(storedData) : null;
+	const store: StoreProps[] = storedData ? JSON.parse(storedData) : null;
 
 	const [open, setOpen] = useState(false);
 	const [storageId, setStorageId] = useState<string | null>();
@@ -41,11 +45,17 @@ const Lists = () => {
 		setOpen(false);
 	};
 
-	const selectedId = store?.filter(({id}: {id: string}) => storageId === id);
+	const selectedId = store?.filter(({id}) => storageId === id);
+
+	if (!selectedId) {
+		return (
+			<div className="w-full h-full flex p-6 text-center">
+				<h1 className="text-3xl font-bold text-gray-900">Please add user info</h1>
+			</div>
+		);
+	}
 
 	const dataById = selectedId[0];
-
-	console.log(dataById);
 
 	return (
 		<div className="max-w-screen-2xl mx-auto">

@@ -1,9 +1,15 @@
+export interface PreferredProductsType {
+	preferredProducts: string;
+	orderFrequency: string;
+	quantity: number | string;
+}
+
 export type FormProp = {
 	id?: string | null;
 	// restaurant: boolean;
 	// supermarket: boolean;
 	// others: boolean;
-	preferredTime: string[],
+	preferredTime: string[];
 	// checkboxes: boolean[];
 	business: string;
 	anyOtherText?: string;
@@ -18,11 +24,7 @@ export type FormProp = {
 	landmark: string;
 	email: string;
 	country: string;
-	products: {
-		preferredProducts: string;
-		orderFrequency: string;
-		quantity: number | string;
-	}[];
+	products: PreferredProductsType[];
 
 	general: boolean;
 	meat: boolean;
