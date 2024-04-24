@@ -38,7 +38,6 @@ import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 
 const Home = () => {
   const [statesUS] = useState(states);
-  const [selectedTimes, setSelectedTimes] = useState<number | null>(null);
   const navigate = useNavigate();
   const formId = useId();
   const methods = useForm<FormProp>({
@@ -56,10 +55,6 @@ const Home = () => {
   } = methods;
 
   const values = watch();
-  console.log(values.preferredTime.length);
-  useEffect(() => {
-    setSelectedTimes(values.preferredTime.length);
-  }, [values.preferredTime]);
 
   useEffect(() => {
     if (values.business !== "Others") {
@@ -127,6 +122,15 @@ const Home = () => {
     reset();
   };
 
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+  const handleCheckboxChange = (value: string) => {
+    if (selectedTimes.includes(value)) {
+      setSelectedTimes(selectedTimes.filter((time) => time !== value));
+    } else {
+      setSelectedTimes([...selectedTimes, value]);
+    }
+  };
+
   // const handleCheckboxChange = (value: string) => {
   //   if (selectedTimes.includes(value)) {
   //     setSelectedTimes(selectedTimes.filter((time) => time !== value));
@@ -135,7 +139,7 @@ const Home = () => {
   //   }
   // };
 
-  console.log(selectedTimes);
+  //   console.log(errors.interestedProducts);
 
   return (
     <FormProvider {...methods}>
@@ -692,11 +696,12 @@ const Home = () => {
             <RHFMultiCheckbox
               rules={{
                 required: {
-                  value: selectedTimes && selectedTimes > 1 ? true : false,
+                  value: selectedTimes.length > 2 ? false : true,
                   message: "Make sure at least two checkboxes are checked!",
                 },
               }}
               options={TIME_OPTIONS}
+              handleChange={(option) => handleCheckboxChange(option)}
               name="preferredTime"
             />
           </div>
