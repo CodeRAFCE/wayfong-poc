@@ -11,6 +11,10 @@ export type FormProp = {
 	// others: boolean;
 	preferredTime: string[];
 	// checkboxes: boolean[];
+	checkDefaultAddress: boolean;
+	payTerm: string;
+	payType: string;
+	interestedProducts: string[],
 	business: string;
 	anyOtherText?: string;
 	companyName: string;
@@ -25,13 +29,4 @@ export type FormProp = {
 	email: string;
 	country: string;
 	products: PreferredProductsType[];
-
-	general: boolean;
-	meat: boolean;
-	seafood: boolean;
-	cookedFood: boolean;
-	dimSum: boolean;
-	tofu: boolean;
-	roastedMeat: boolean;
-	grocery: boolean;
 };
