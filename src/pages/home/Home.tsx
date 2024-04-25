@@ -713,19 +713,26 @@ const Home = () => {
             </FormHelperText>
           )}
         </div>
-
+          <Box sx={{display: "flex", justifyContent: "end"}}>
         <Button
           type="submit"
-          fullWidth
           sx={{
             backgroundColor: "#00AA5C",
             "&:hover": { backgroundColor: "#00AA5C" },
             color: "#fff",
+            alignItems: "right",
+            "@media (max-width: 600px)": {
+              width: "40%", // Adjusted width for smaller screens (e.g., mobile)
+              borderRadius: "30px"
+            },
+            width: "100%",
+
           }}
           disabled={!isValid}
         >
           Submit
         </Button>
+        </Box>
       </form>
     </FormProvider>
   );
