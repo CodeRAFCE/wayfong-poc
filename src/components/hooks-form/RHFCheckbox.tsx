@@ -7,6 +7,8 @@ import {
   CheckboxProps,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 interface RHFCheckboxProps {
   name: string;
   label: string;
@@ -56,43 +58,58 @@ interface RHFMultiCheckboxProps {
   name: string;
   options: string[];
   rules?: object;
-  handleChange?: (option: string) => void;
+  handleChange?: (option: string) => void ;
 }
 
 export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({
   name,
   options,
   rules,
+  handleChange,
   ...other
 }) => {
   const { control } = useFormContext<FieldValues>();
-
+  const theme = useTheme();
+  
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
       render={({ field }) => {
-        const onSelected = (option: string) =>
-          field.value.includes(option)
-            ? field.value.filter((value: string) => value !== option)
-            : [...field.value, option];
-
+        // const onSelected = (option: string) =>
+        //   field.value.includes(option)
+        //     ? field.value.filter((value: string) => value !== option)
+        //     : [...field.value, option];
+            // console.log(field.value?.includes(options[0]));
         return (
           <FormGroup
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 2,
+              gridTemplateColumns: "repeat(3, 2fr)",
+              gap: 0,
+              [theme.breakpoints.down("md")]: {
+                gridTemplateColumns: "repeat(2, 1fr)",
+              },
+              [theme.breakpoints.between("xs", 344)]: {
+                gridTemplateColumns: "repeat(1, 1fr)",
+              },
             }}
+            {...field}
           >
             {options?.map((option) => (
               <FormControlLabel
                 key={option}
+                value={option}
                 control={
                   <Checkbox
-                    checked={field.value?.includes(option)}
-                    onChange={() => field.onChange(onSelected(option))}
+                    // checked={field.value?.includes(option)}
+                    onChange={() => {
+                      field.onChange(option);
+                      if(handleChange){
+                      handleChange(option);
+                      }
+                    }}
                     value={option}
                     sx={{
                       color: "#00AA5C",
@@ -100,12 +117,14 @@ export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({
                         color: "#00AA5C",
                       },
                     }}
+                    // {...field}
                   />
                 }
                 label={option}
                 {...other}
               />
             ))}
+            {/* {error && <FormHelperText error>{error.message}</FormHelperText>} */}
           </FormGroup>
         );
       }}
