@@ -1,9 +1,8 @@
 import {Link, Outlet} from "react-router-dom";
-import {Toaster} from "sonner";
 
 import logo from "/logo.webp";
 
-import Providers from "../Providers";
+import Providers from "../components/Providers";
 
 const MainLayout = () => {
 	return (
@@ -16,10 +15,6 @@ const MainLayout = () => {
 					<div className="flex items-center gap-8">
 						<Link to="/" className="font-semibold capitalize text-white">
 							Home
-						</Link>
-
-						<Link to="/lists" className="font-semibold capitalize text-white">
-							Lists
 						</Link>
 					</div>
 				</div>
@@ -41,9 +36,6 @@ const MainLayout = () => {
 				<main className="w-full h-full bg-hero-pattern bg-cover bg-no-repeat bg-center mt-4">
 					<Outlet />
 				</main>
-
-				{/* FOOTER */}
-				<Toaster position="bottom-center" richColors closeButton />
 			</div>
 		</Providers>
 	);
