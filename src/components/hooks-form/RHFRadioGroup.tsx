@@ -46,10 +46,12 @@ const RHFRadioGroup: FC<RHFRadioGroupProps & RadioProps> = ({
                       "&.Mui-checked": {
                         color: "#00AA5C",
                       },
+                      
                     }}
                   />
                 }
                 label={getOptionLabel?.length ? getOptionLabel[index] : option}
+                sx={{paddingRight : 1.5,}}
               />
             ))}
           </RadioGroup>

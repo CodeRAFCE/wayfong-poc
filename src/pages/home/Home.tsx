@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
   FormHelperText,
   IconButton,
   InputAdornment,
@@ -11,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  Controller,
   FormProvider,
   SubmitHandler,
   useFieldArray,
@@ -41,7 +46,7 @@ const Home = () => {
   const navigate = useNavigate();
   const formId = useId();
   const methods = useForm<FormProp>({
-    mode: "onBlur",
+    mode: "all",
     defaultValues: DEFAULT_VALUES,
   });
 
@@ -82,7 +87,6 @@ const Home = () => {
     payType,
     checkDefaultAddress,
     products,
-    preferredTime,
     business,
     anyOtherText,
     landmark,
@@ -105,7 +109,7 @@ const Home = () => {
       payTerm,
       payType,
       products,
-      preferredTime,
+      preferredTime: selectedTimes,
       business,
       anyOtherText,
       interestedProducts,
@@ -123,23 +127,15 @@ const Home = () => {
   };
 
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-  const handleCheckboxChange = (value: string) => {
-    if (selectedTimes.includes(value)) {
-      setSelectedTimes(selectedTimes.filter((time) => time !== value));
+  const handleCheckboxChange = (option: string) => {
+    if (selectedTimes.includes(option)) {
+      setSelectedTimes(selectedTimes.filter((time) => time !== option));
     } else {
-      setSelectedTimes([...selectedTimes, value]);
+      setSelectedTimes([...selectedTimes, option]);
     }
   };
 
-  // const handleCheckboxChange = (value: string) => {
-  //   if (selectedTimes.includes(value)) {
-  //     setSelectedTimes(selectedTimes.filter((time) => time !== value));
-  //   } else {
-  //     setSelectedTimes([...selectedTimes, value]);
-  //   }
-  // };
-
-  //   console.log(errors.interestedProducts);
+  console.log(selectedTimes);
 
   return (
     <FormProvider {...methods}>
@@ -340,6 +336,25 @@ const Home = () => {
           <div className="w-full mb-4">
             <Box sx={{ width: "100%" }}>
               <RHFTextField
+                name="zipCode"
+                label="ZipCode*"
+                rules={{
+                  required: { value: true, message: "This field is required!" },
+                  pattern: {
+                    value: /^\d{6}$/,
+                    message: "Zip code must be a six-digit number!",
+                  },
+                }}
+                size="small"
+                InputProps={{
+                  className: "bg-[#FDF0E1]",
+                }}
+              />
+            </Box>
+          </div>
+          <div className="w-full mb-4">
+            <Box sx={{ width: "100%" }}>
+              <RHFTextField
                 name="city"
                 label="City*"
                 rules={{
@@ -393,44 +408,8 @@ const Home = () => {
           <div className="w-full mb-4">
             <Box sx={{ width: "100%" }}>
               <RHFTextField
-                name="landmark"
-                label="Landmark*"
-                rules={{
-                  required: { value: true, message: "This field is required!" },
-                }}
-                size="small"
-                InputProps={{
-                  className: "bg-[#FDF0E1]",
-                }}
-              />
-            </Box>
-          </div>
-
-          <div className="w-full mb-4">
-            <Box sx={{ width: "100%" }}>
-              <RHFTextField
-                name="zipCode"
-                label="Zip code*"
-                rules={{
-                  required: { value: true, message: "This field is required!" },
-                  pattern: {
-                    value: /^\d{6}$/,
-                    message: "Zip code must be a six-digit number!",
-                  },
-                }}
-                size="small"
-                InputProps={{
-                  className: "bg-[#FDF0E1]",
-                }}
-              />
-            </Box>
-          </div>
-
-          <div className="w-full mb-4">
-            <Box sx={{ width: "100%" }}>
-              <RHFTextField
                 name="country"
-                label="Country*"
+                label="Country"
                 rules={{
                   required: { value: true, message: "This field is required!" },
                 }}
@@ -454,7 +433,7 @@ const Home = () => {
           sx={{
             mb: "2em",
             color: "#9E4900",
-            fontWeight: "500",
+            fontWeight: "600",
             fontSize: "16px",
           }}
         >
@@ -466,7 +445,9 @@ const Home = () => {
           </label>
           {/* TODO: rules is pending */}
           <RHFRadioGroup
-            rules={{ required: { value: true, message: "This field is req!" } }}
+            rules={{
+              required: { value: true, message: "This field is required!" },
+            }}
             name="payTerm"
             options={PAY_TERM}
           />
@@ -476,7 +457,9 @@ const Home = () => {
             Pay Type*:
           </label>
           <RHFRadioGroup
-            rules={{ required: { value: true, message: "This field is req!" } }}
+            rules={{
+              required: { value: true, message: "This field is required!" },
+            }}
             name="payType"
             options={PAY_TYPE}
           />
@@ -512,10 +495,17 @@ const Home = () => {
             Interested product category*:
           </label>
           <RHFMultiCheckbox
-            rules={{ required: { value: true, message: "This field is req!" } }}
+            rules={{
+              required: { value: true, message: "This field is required!" },
+            }}
             name="interestedProducts"
             options={PRODUCT_CATEGORY}
           />
+          {errors.interestedProducts && (
+            <FormHelperText error>
+              {errors.interestedProducts.message}
+            </FormHelperText>
+          )}
         </div>
 
         <div className="w-full mb-4">
@@ -688,15 +678,14 @@ const Home = () => {
 
         <div className="w-full mb-4">
           <label htmlFor="" className="font-semibold">
-            Preferred time to contact**
+            Preferred time to contact*
           </label>
-
-          {/* <FormGroup> */}
           <div>
+            {/* TODO: Time validation pending */}
             <RHFMultiCheckbox
               rules={{
                 required: {
-                  value: selectedTimes.length > 2 ? false : true,
+                  value: selectedTimes && selectedTimes.length > 2 ? false : true,
                   message: "Make sure at least two checkboxes are checked!",
                 },
               }}
@@ -713,25 +702,88 @@ const Home = () => {
             </FormHelperText>
           )}
         </div>
-          <Box sx={{display: "flex", justifyContent: "end"}}>
-        <Button
-          type="submit"
-          sx={{
-            backgroundColor: "#00AA5C",
-            "&:hover": { backgroundColor: "#00AA5C" },
-            color: "#fff",
-            alignItems: "right",
-            "@media (max-width: 600px)": {
-              width: "40%", // Adjusted width for smaller screens (e.g., mobile
-              borderRadius: "30px"
-            },
-            width: "100%",
 
-          }}
-          disabled={!isValid}
-        >
-          Submit
-        </Button>
+        {/* <div className="w-full mb-4">
+          <label htmlFor="" className="font-semibold">
+            Preferred time to contact**
+          </label>
+          <div>
+            <FormControl component="fieldset">
+              <Controller
+                rules={{
+                  required: {
+                    value: selectedTimes.length > 1 ? false : true,
+                    message: "Make sure at least two checkboxes are checked!",
+                  },
+                }}
+                control={control}
+                name="preferredTime"
+                render={({ field }) => (
+                  <FormGroup {...field} >
+                    <div className="grid grid-cols-3 gap-6">
+                      {TIME_OPTIONS.map((option) => (
+                        <FormControlLabel
+                          key={option}
+                          value={option}
+                          control={
+                            <Checkbox
+                              {...field}
+                              value={option}
+                              onChange={() =>
+                                handleCheckboxChange(option)
+                              }
+                            />
+                          }
+                          label={option}
+                          sx={{
+                            color: "#00AA5C",
+                            "&.Mui-checked": {
+                              color: "#00AA5C",
+                            },
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </FormGroup>
+                )}
+              />
+            </FormControl>
+          </div>
+
+          <FormHelperText>**Select at least 2 slots</FormHelperText>
+          {errors.preferredTime && (
+            <FormHelperText error>
+              {errors.preferredTime.message}
+            </FormHelperText>
+          )}
+        </div> */}
+        <Box sx={{ display: "flex", justifyContent: "end", zIndex: -1 }}>
+          <Button
+            type="submit"
+            sx={{
+              backgroundColor: "#00AA5C",
+              "&:hover": { backgroundColor: "#00AA5C" },
+              color: "#fff",
+              alignItems: "right",
+              "@media (max-width: 600px)": {
+                width: "40%",
+                borderRadius: "30px",
+              },
+              width: "40%",
+              borderRadius: "30px",
+              "&.Mui-disabled": {
+                backgroundColor: "grey",
+                color: "#ccc",
+                cursor: "not-allowed",
+              },
+              "&:disabled": {
+                cursor: "not-allowed",
+              },
+            }}
+            disabled={!isValid}
+          >
+            Submit
+          </Button>
         </Box>
       </form>
     </FormProvider>
