@@ -722,7 +722,7 @@ const Home = () => {
             color: "#fff",
             alignItems: "right",
             "@media (max-width: 600px)": {
-              width: "40%", // Adjusted width for smaller screens (e.g., mobile)
+              width: "40%", // Adjusted width for smaller screens (e.g., mobile
               borderRadius: "30px"
             },
             width: "100%",
