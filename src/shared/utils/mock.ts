@@ -1,4 +1,4 @@
-import {FormProp} from "../../types/form.type";
+import {CustomerOnboardingFormData} from "../../types/form.type";
 
 export const TIME_OPTIONS = [
 	"9 AM - 11 AM",
@@ -9,6 +9,11 @@ export const TIME_OPTIONS = [
 	"7 PM - 9 PM",
 ];
 export const TYPE_OPTIONS = ["Restaurant", "Supermarket", "Others"];
+export const DELIVERY_OPTIONS = [
+	"Self Pickup",
+	"Deliver to Location",
+	"Deliver to Trucking Company",
+];
 export const PAY_TERM = ["Weekly", "Bi-Monthly", "Monthly", "Quarterly"];
 export const PAY_TYPE = ["Cash", "Card", "Cheque", "ACH"];
 export const PRODUCT_CATEGORY = [
@@ -22,24 +27,24 @@ export const PRODUCT_CATEGORY = [
 	"Grocery",
 ];
 
-export const DEFAULT_VALUES: FormProp = {
+export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	companyName: "",
-	contactPerson: "",
+	contactName: "",
 	phone: "",
 	zipCode: "",
 	city: "",
 	state: "",
+	addressLine1: "",
+	addressLine2: "",
 	country: "USA",
 	email: "",
-	address1: "",
-	address2: "",
-	landmark: "",
 	payTerm: "",
 	payType: "",
-	products: [{preferredProducts: "", orderFrequency: "", quantity: ""}],
-	checkDefaultAddress: false,
-	preferredTime: [],
-	business: "",
-	anyOtherText: "",
-	interestedProducts: [],
+	products: [{productName: "", orderFrequency: "", quantity: ""}],
+	isAlsoBillingAddress: false,
+	preferredTimeSlots: [],
+	businessType: "",
+	interestedProductCategories: [],
+	turnOverPerAnnum: "",
+	comment: "",
 };
