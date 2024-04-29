@@ -17,7 +17,6 @@ import {
 import {Controller, FormProvider, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {Plus, Trash} from "lucide-react";
 import {CustomerOnboardingFormData} from "../../types/form.type";
-import usFlag from "/usflag.jpg";
 import states from "../../components/us.json";
 import {
 	DEFAULT_VALUES,
@@ -32,7 +31,6 @@ import RHFTextField, {TextMaskCustom} from "../../components/hooks-form/RHFTextF
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
-import {splitFieldInternalAndForwardedProps} from "@mui/x-date-pickers/internals";
 
 const Home = () => {
 	const [statesUS] = useState(states);
@@ -54,14 +52,7 @@ const Home = () => {
 
 	const values = watch();
 
-	useEffect(() => {
-		if (values.preferredTimeSlots && values.preferredTimeSlots.length > 2) {
-			setError("preferredTimeSlots", {
-				message: "Make sure at least two time slots are checked!",
-				type: "onChange",
-			});
-		}
-	}, [setError, values.preferredTimeSlots]);
+	console.log(errors);
 
 	const {append, remove, fields} = useFieldArray({
 		name: "products",
@@ -75,6 +66,25 @@ const Home = () => {
 
 		setValue("businessType", typeof value === "string" ? value.split(",") : value);
 	};
+
+	useEffect(() => {
+		const getCustomers = async () => {
+			const response = await fetch("http://localhost:3000/api/test", {
+				method: "POST",
+				body: JSON.stringify({hi: "TESTING THE NEW ENDPOINT"}),
+				headers: {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*",
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error("Uh-ho something went wrong!");
+			}
+		};
+
+		getCustomers();
+	}, []);
 
 	const handleOnSubmit: SubmitHandler<CustomerOnboardingFormData> = async ({
 		addressLine1,
@@ -131,6 +141,10 @@ const Home = () => {
 		await fetch("http://localhost:3000/api/customers", {
 			method: "POST",
 			body: JSON.stringify(productDetails),
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+			},
 		});
 
 		navigate("/thankyou");
@@ -138,14 +152,6 @@ const Home = () => {
 	};
 
 	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
-	const handleCheckboxChange = (option: string) => {
-		if (selectedTimes.includes(option)) {
-			setSelectedTimes(selectedTimes.filter((time) => time !== option));
-		} else {
-			setSelectedTimes([...selectedTimes, option]);
-		}
-	};
 
 	return (
 		<FormProvider {...methods}>
@@ -164,6 +170,7 @@ const Home = () => {
 							}}
 						/>
 					</Box>
+
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="contactName"
@@ -270,10 +277,6 @@ const Home = () => {
 								control={control}
 								rules={{
 									required: {value: true, message: "This field is required!"},
-									pattern: {
-										value: /^[2-9]\d{2}\d{3}\d{4}$/,
-										message: "Invalid US phone number format! (e.g., XXX-XXX-XXXX)",
-									},
 								}}
 								render={({field}) => {
 									return (
@@ -492,6 +495,7 @@ const Home = () => {
 						</Box>
 					</div>
 				</div>
+
 				<div className="w-full mb-4">
 					<RHFCheckbox label="Use it as my Billing Address" name="isAlSoBillingAddress" />
 				</div>
@@ -565,9 +569,9 @@ const Home = () => {
 						Interested product category*:
 					</label>
 					<RHFMultiCheckbox
-						// rules={{
-						// 	required: {value: true, message: "This field is required!"},
-						// }}
+						rules={{
+							required: {value: true, message: "This field is required!"},
+						}}
 						name="interestedProductCategories"
 						options={PRODUCT_CATEGORY}
 					/>
@@ -756,23 +760,21 @@ const Home = () => {
 					<div>
 						{/* TODO: Time validation pending */}
 						<RHFMultiCheckbox
-							// rules={{
-							// 	required: {
-							// 		value: selectedTimes && selectedTimes.length > 2 ? false : true,
-							// 		message: "Make sure at least two time slots are checked!",
-							// 	},
-							// }}
 							rules={{
 								required: {
-									value:
-										values.preferredTimeSlots && values.preferredTimeSlots.length > 2
-											? false
-											: true,
-									message: "Make sure at least two time slots are checked!",
+									value: true,
+									message: "This field is required!",
 								},
+								// validate: (options: string[]) => {
+								// 	if (options && options.length < 3) {
+								// 		setError("preferredTimeSlots", {
+								// 			message: "Make sure at least two time slots are checked!",
+								// 			type: "onChange",
+								// 		});
+								// 	}
+								// },
 							}}
 							options={TIME_OPTIONS}
-							// handleChange={(option) => handleCheckboxChange(option)}
 							name="preferredTimeSlots"
 						/>
 					</div>

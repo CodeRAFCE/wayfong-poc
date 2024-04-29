@@ -1,6 +1,6 @@
 import {ChangeEvent, FC} from "react";
 import {useFormContext, Controller, FieldValues} from "react-hook-form";
-import {Checkbox, FormGroup, FormControlLabel, CheckboxProps} from "@mui/material";
+import {Checkbox, FormGroup, FormControlLabel, CheckboxProps, FormHelperText} from "@mui/material";
 
 import {useTheme} from "@mui/material/styles";
 
@@ -46,14 +46,22 @@ export const RHFCheckbox: FC<RHFCheckboxProps & CheckboxProps> = ({
 
 interface RHFMultiCheckboxProps {
 	name: string;
+	errorMessage?: string;
 	options: string[];
 	rules?: object;
 	handleChange?: (option: string) => void;
+	handleBlur?: () => void;
 }
 
-export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({name, options, rules, ...other}) => {
-	const {control} = useFormContext<FieldValues>();
+export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({
+	name,
+	options,
+	handleBlur,
+	rules,
+	...other
+}) => {
 	const theme = useTheme();
+	const {control} = useFormContext<FieldValues>();
 
 	return (
 		// <Controller
@@ -61,12 +69,11 @@ export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({name, options, rule
 		// 	control={control}
 		// 	rules={rules}
 		// 	render={({field}) => {
-				// const onSelected = (option: string) =>
-				//   field.value.includes(option)
-				//     ? field.value.filter((value: string) => value !== option)
-				//     : [...field.value, option];
-				// console.log(field.value?.includes(options[0]));
-		// 		console.log(field.value);
+		// const onSelected = (option: string) =>
+		//   field.value.includes(option)
+		//     ? field.value.filter((value: string) => value !== option)
+		//     : [...field.value, option];
+
 		// 		return (
 		// 			<FormGroup
 		// 				sx={{
@@ -125,10 +132,11 @@ export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({name, options, rule
 			control={control}
 			rules={rules}
 			render={({field}) => {
-				const onSelected = (option) =>
-					field.value.includes(option)
-						? field.value.filter((value) => value !== option)
+				const onSelected = (option: string) => {
+					return field.value.includes(option)
+						? field.value.filter((value: string) => value !== option)
 						: [...field.value, option];
+				};
 
 				return (
 					<FormGroup
