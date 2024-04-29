@@ -36,7 +36,7 @@ export interface CustomerOnboardingFormData {
 	companyName: string;
 	contactName: string;
 	phone: number | string;
-	businessType: string;
+	businessType: string | string[];
 	email: string;
 	products: PreferredProducts[];
 	addressLine1: string;
@@ -52,4 +52,5 @@ export interface CustomerOnboardingFormData {
 	payTerm: string;
 	payType: string;
 	isAlsoBillingAddress: boolean;
+	deliveryOption: string;
 }

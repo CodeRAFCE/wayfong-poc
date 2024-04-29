@@ -8,7 +8,7 @@ export const TIME_OPTIONS = [
 	"5 PM - 7 PM",
 	"7 PM - 9 PM",
 ];
-export const TYPE_OPTIONS = ["Restaurant", "Supermarket", "Others"];
+
 export const DELIVERY_OPTIONS = [
 	"Self Pickup",
 	"Deliver to Location",
@@ -27,6 +27,16 @@ export const PRODUCT_CATEGORY = [
 	"Grocery",
 ];
 
+export const BUSINESS_TYPE = [
+	"Restaurant",
+	"Supermarket",
+	"Walk-in",
+	"Staff",
+	"Charity",
+	"Wholesale",
+	"Jobber",
+];
+
 export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	companyName: "",
 	contactName: "",
@@ -43,8 +53,9 @@ export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	products: [{productName: "", orderFrequency: "", quantity: ""}],
 	isAlsoBillingAddress: false,
 	preferredTimeSlots: [],
-	businessType: "",
+	businessType: [],
 	interestedProductCategories: [],
 	turnOverPerAnnum: "",
 	comment: "",
+	deliveryOption: "",
 };

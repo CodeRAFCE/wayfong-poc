@@ -2,7 +2,7 @@ import {CircleCheckBig} from "lucide-react";
 
 const ThankYou = () => {
 	return (
-		<div className="w-full h-full text-center flex flex-col items-center justify-center">
+		<div className="w-full h-full text-center flex flex-col items-center justify-start">
 			<div className="rounded-full h-40 w-40 bg-[#E3FBE3] flex items-center justify-center">
 				<CircleCheckBig className="text-[#00AA5C] h-24 w-24" />
 			</div>

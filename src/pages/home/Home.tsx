@@ -1,16 +1,20 @@
-import {useId, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
 	Box,
 	Button,
+	Checkbox,
 	Divider,
 	FormHelperText,
 	IconButton,
 	InputAdornment,
+	ListItemText,
 	MenuItem,
+	SelectChangeEvent,
+	TextField,
 	Typography,
 } from "@mui/material";
-import {FormProvider, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
+import {Controller, FormProvider, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {Plus, Trash} from "lucide-react";
 import {CustomerOnboardingFormData} from "../../types/form.type";
 import usFlag from "/usflag.jpg";
@@ -21,18 +25,18 @@ import {
 	PAY_TERM,
 	PAY_TYPE,
 	PRODUCT_CATEGORY,
+	BUSINESS_TYPE,
 	TIME_OPTIONS,
-	TYPE_OPTIONS,
 } from "../../shared/utils/mock";
-import RHFTextField from "../../components/hooks-form/RHFTextField";
+import RHFTextField, {TextMaskCustom} from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
+import {splitFieldInternalAndForwardedProps} from "@mui/x-date-pickers/internals";
 
 const Home = () => {
 	const [statesUS] = useState(states);
 	const navigate = useNavigate();
-	const formId = useId();
 	const methods = useForm<CustomerOnboardingFormData>({
 		mode: "all",
 		defaultValues: DEFAULT_VALUES,
@@ -43,18 +47,34 @@ const Home = () => {
 		control,
 		formState: {isValid, errors},
 		reset,
+		watch,
+		setValue,
+		setError,
 	} = methods;
 
-	// useEffect(() => {
-	// 	if (values.business !== "Others") {
-	// 		clearErrors("anyOtherText");
-	// 	}
-	// }, [clearErrors, values.business]);
+	const values = watch();
+
+	useEffect(() => {
+		if (values.preferredTimeSlots && values.preferredTimeSlots.length > 2) {
+			setError("preferredTimeSlots", {
+				message: "Make sure at least two time slots are checked!",
+				type: "onChange",
+			});
+		}
+	}, [setError, values.preferredTimeSlots]);
 
 	const {append, remove, fields} = useFieldArray({
 		name: "products",
 		control,
 	});
+
+	const handleBusinessTypeChange = (event: SelectChangeEvent<typeof values.businessType>) => {
+		const {
+			target: {value},
+		} = event;
+
+		setValue("businessType", typeof value === "string" ? value.split(",") : value);
+	};
 
 	const handleOnSubmit: SubmitHandler<CustomerOnboardingFormData> = async ({
 		addressLine1,
@@ -64,7 +84,7 @@ const Home = () => {
 		comment,
 		companyName,
 		contactName,
-		country,
+		deliveryOption,
 		email,
 		interestedProductCategories,
 		isAlsoBillingAddress,
@@ -72,46 +92,53 @@ const Home = () => {
 		payType,
 		phone,
 		products,
+		preferredTimeSlots,
 		state,
 		turnOverPerAnnum,
 		zipCode,
 	}) => {
 		const productDetails = {
-			id: formId.slice(0, 3),
+			registrationId: "12J123",
 			shippingAddress: {
-				addressLine1,
-				addressLine2,
+				line1: addressLine1,
+				line2: addressLine2,
 				city,
 				zipCode,
 				state,
 			},
-			isAlsoBillingAddress,
+			shouldUseShippingAsBillingAddress: isAlsoBillingAddress,
 			businessType,
-			comment,
+			comments: [{value: comment}],
 			companyName,
 			contactName,
-			country,
 			email,
 			interestedProductCategories,
-			payTerm,
-			payType,
-			phone,
-			preferredTimeSlots: selectedTimes,
-			products,
+			paymentTerm: payTerm,
+			paymentType: payType,
+			phoneNumber: phone,
+			preferredTimeSlots: preferredTimeSlots,
+			preferredProducts: products,
 			turnOverPerAnnum,
+			deliveryOption,
 		};
 
-		const itemsInCompare = JSON.parse(localStorage.getItem("itemsInCompare") || "[]");
+		// const itemsInCompare = JSON.parse(localStorage.getItem("itemsInCompare") || "[]");
 
-		itemsInCompare.push(productDetails);
+		// itemsInCompare.push(productDetails);
 
-		localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
+		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
+
+		await fetch("http://localhost:3000/api/customers", {
+			method: "POST",
+			body: JSON.stringify(productDetails),
+		});
+
 		navigate("/thankyou");
 		reset();
 	};
 
-  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-  
+	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+
 	const handleCheckboxChange = (option: string) => {
 		if (selectedTimes.includes(option)) {
 			setSelectedTimes(selectedTimes.filter((time) => time !== option));
@@ -168,9 +195,14 @@ const Home = () => {
 							SelectProps={{
 								native: false,
 								sx: {textTransform: "capitalize"},
+								multiple: true,
+								renderValue: (selected) => selected.join(", "),
+								value: values.businessType,
+								onChange: (e: SelectChangeEvent<typeof values.businessType>) =>
+									handleBusinessTypeChange(e),
 							}}
 						>
-							{TYPE_OPTIONS.map((option) => (
+							{BUSINESS_TYPE.map((option) => (
 								<MenuItem
 									key={option}
 									value={option}
@@ -180,41 +212,35 @@ const Home = () => {
 										borderRadius: 0.75,
 										typography: "body2",
 										textTransform: "capitalize",
+										bgcolor: "",
+										"&.MuiMenuItem-root": {
+											"&.Mui-selected": {
+												backgroundColor: "rgba(12, 133, 9, 0.1)",
+											},
+										},
 									}}
 								>
-									{option}
+									<Checkbox
+										sx={{
+											color: "#00AA5C",
+											"&.Mui-checked": {
+												color: "#00AA5C",
+											},
+										}}
+										checked={values.businessType.indexOf(option) > -1}
+									/>
+									<ListItemText primary={option} sx={{p: 0.5}} />
 								</MenuItem>
 							))}
 						</RHFSelect>
 					</Box>
-
-					{/* {values.businessType == "Others" && (
-						<Box sx={{width: "100%"}}>
-							<RHFTextField
-								name="anyOtherText"
-								label="Any other business type*"
-								size="small"
-								rules={{
-									required: {
-										value: values.businessType === "Others",
-										message: "This field is required!",
-									},
-								}}
-								disabled={values.businessType !== "Others"}
-								InputProps={{
-									className: `${values.businessType !== "Others" ? "bg-black" : "bg-[#FDF0E1]"}`,
-								}}
-							/>
-						</Box>
-					)} */}
 				</div>
 
 				<div className="w-full mb-4">
 					<Box sx={{width: "100%"}}>
-						<RHFTextField
+						{/* <RHFTextField
 							name="phone"
 							label="Phone number*"
-							type="number"
 							rules={{
 								required: {value: true, message: "This field is required!"},
 								pattern: {
@@ -235,8 +261,82 @@ const Home = () => {
 										</div>
 									</InputAdornment>
 								),
+								inputComponent: TextMaskCustom as any,
 							}}
-						/>
+						/> */}
+						<Box sx={{height: "3.5em", maxHeight: "3.5em"}}>
+							<Controller
+								name="phone"
+								control={control}
+								rules={{
+									required: {value: true, message: "This field is required!"},
+									pattern: {
+										value: /^[2-9]\d{2}\d{3}\d{4}$/,
+										message: "Invalid US phone number format! (e.g., XXX-XXX-XXXX)",
+									},
+								}}
+								render={({field}) => {
+									return (
+										<TextField
+											fullWidth
+											label="Phone Number*"
+											InputProps={{
+												inputComponent: TextMaskCustom as any,
+												className: "bg-[#FDF0E1]",
+												startAdornment: (
+													<InputAdornment position="start">
+														<div className="flex items-center gap-2">
+															{/* <img src={usFlag} className="h-4" /> */}
+															+1
+														</div>
+														<div className="">
+															<Divider
+																orientation="vertical"
+																flexItem
+																sx={{backgroundColor: "gray"}}
+															/>
+														</div>
+													</InputAdornment>
+												),
+											}}
+											id="formatted-text-mask-input"
+											size="small"
+											sx={{
+												"& .MuiOutlinedInput-root": {
+													"& .MuiOutlinedInput-notchedOutline": {
+														borderWidth: "1px",
+														transition: "border-color 0.3s",
+													},
+													"&:hover .MuiOutlinedInput-notchedOutline": {
+														borderColor: "#CA7229",
+													},
+													"&.Mui-focused": {
+														"& .MuiOutlinedInput-notchedOutline": {
+															borderColor: "#CA7229",
+															borderWidth: "2px",
+														},
+
+														"& .MuiInputLabel-outlined": {
+															color: "#CA7229",
+															"&.Mui-focused": {
+																color: "#CA7229",
+															},
+														},
+													},
+												},
+
+												"& .MuiInputLabel-outlined": {
+													"&.Mui-focused": {
+														color: "#CA7229",
+													},
+												},
+											}}
+											{...field}
+										/>
+									);
+								}}
+							/>
+						</Box>
 					</Box>
 				</div>
 
@@ -293,10 +393,7 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="addressLine2"
-							label="Address Line 2*"
-							rules={{
-								required: {value: true, message: "This field is required!"},
-							}}
+							label="Address Line 2"
 							size="small"
 							InputProps={{
 								className: "bg-[#FDF0E1]",
@@ -398,18 +495,19 @@ const Home = () => {
 				<div className="w-full mb-4">
 					<RHFCheckbox label="Use it as my Billing Address" name="isAlSoBillingAddress" />
 				</div>
-				<Typography
-					variant="subtitle2"
-					sx={{
-						mb: "2em",
-						color: "#9E4900",
-						fontWeight: "600",
-						fontSize: "16px",
-					}}
-				>
-					Payment Information
-				</Typography>
+
 				<div className="w-full mb-4">
+					<Typography
+						variant="subtitle2"
+						sx={{
+							mb: "1rem",
+							color: "#9E4900",
+							fontWeight: "600",
+							fontSize: "16px",
+						}}
+					>
+						Payment Information
+					</Typography>
 					<label htmlFor="" className="font-semibold">
 						Pay Term*:
 					</label>
@@ -422,6 +520,7 @@ const Home = () => {
 						options={PAY_TERM}
 					/>
 				</div>
+
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
 						Pay Type*:
@@ -460,14 +559,15 @@ const Home = () => {
 						/>
 					</Box>
 				</div>
+
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
 						Interested product category*:
 					</label>
 					<RHFMultiCheckbox
-						rules={{
-							required: {value: true, message: "This field is required!"},
-						}}
+						// rules={{
+						// 	required: {value: true, message: "This field is required!"},
+						// }}
 						name="interestedProductCategories"
 						options={PRODUCT_CATEGORY}
 					/>
@@ -476,17 +576,14 @@ const Home = () => {
 					)}
 				</div>
 
-				<div className="w-full mb-4">
+				<div className="w-full mb-8">
 					<label htmlFor="" className="font-semibold">
 						Preferred Products:
 					</label>
-					<Box
-						className="customScrollbar"
-						sx={{overflowY: "auto", height: "auto", maxHeight: "450px", p: 1}}
-					>
+					<Box>
 						{fields.map((field, index) => {
 							return (
-								<div key={field.id} className="my-4">
+								<div key={field.id} className="mt-4">
 									<div className="w-full mb-4">
 										<RHFTextField
 											rules={{
@@ -560,40 +657,8 @@ const Home = () => {
 											/>
 										</div>
 									</div>
-									{index < 1 && (
-										<>
-											<div
-												className="flex items-center justify-end gap-1 mt-4 cursor-pointer"
-												onClick={() =>
-													reset({
-														products: [
-															{
-																productName: "",
-																orderFrequency: "",
-																quantity: "",
-															},
-														],
-													})
-												}
-											>
-												<span className="font-semibold">Clear</span>
-												<IconButton
-													size="small"
-													sx={{
-														backgroundColor: "#D02F36",
-														"&:hover": {
-															backgroundColor: "#D02F36",
-														},
-													}}
-												>
-													<Trash className="text-white" />
-												</IconButton>
-											</div>
 
-											<Divider sx={{my: 4}} />
-										</>
-									)}
-									{index >= 1 && (
+									{fields.length > 2 && (
 										<>
 											<div className="flex items-center justify-end gap-1 mt-4">
 												<span className="font-semibold">Delete</span>
@@ -612,14 +677,17 @@ const Home = () => {
 												</IconButton>
 											</div>
 
-											<Divider sx={{my: 4}} />
+											{/* <Divider sx={{my: 2}} /> */}
 										</>
 									)}
+
+									{index >= 0 && <Divider sx={{my: 2}} />}
 								</div>
 							);
 						})}
 					</Box>
-					<div className="flex items-center gap-1 mt-4">
+
+					<div className="flex items-center gap-1">
 						<IconButton
 							size="small"
 							sx={{
@@ -639,7 +707,7 @@ const Home = () => {
 						>
 							<Plus className="text-white" />
 						</IconButton>{" "}
-						<span>Add Products</span>
+						<span>Add Product</span>
 					</div>
 				</div>
 
@@ -688,14 +756,23 @@ const Home = () => {
 					<div>
 						{/* TODO: Time validation pending */}
 						<RHFMultiCheckbox
+							// rules={{
+							// 	required: {
+							// 		value: selectedTimes && selectedTimes.length > 2 ? false : true,
+							// 		message: "Make sure at least two time slots are checked!",
+							// 	},
+							// }}
 							rules={{
 								required: {
-									value: selectedTimes && selectedTimes.length > 2 ? false : true,
-									message: "Make sure at least two checkboxes are checked!",
+									value:
+										values.preferredTimeSlots && values.preferredTimeSlots.length > 2
+											? false
+											: true,
+									message: "Make sure at least two time slots are checked!",
 								},
 							}}
 							options={TIME_OPTIONS}
-							handleChange={(option) => handleCheckboxChange(option)}
+							// handleChange={(option) => handleCheckboxChange(option)}
 							name="preferredTimeSlots"
 						/>
 					</div>
@@ -706,7 +783,77 @@ const Home = () => {
 					)}
 				</div>
 
-				<Box sx={{display: "flex", justifyContent: "end", zIndex: -1}}>
+				<div className="w-full mb-4">
+					<label htmlFor="" className="font-semibold">
+						Comment*
+					</label>
+
+					{/* <RHFTextField
+						name="comment"
+						multiline
+						rows={4}
+						rules={{
+							required: {value: true, message: "This field is required!"},
+						}}
+						size="small"
+						InputProps={{
+							className: "bg-[#FDF0E1]",
+						}}
+					/> */}
+
+					<Controller
+						name={"comment"}
+						control={control}
+						rules={{
+							required: {value: true, message: "This field is required!"},
+						}}
+						render={({field, fieldState: {error}}) => (
+							<TextField
+								fullWidth
+								error={!!error}
+								multiline
+								rows={4}
+								helperText={error?.message}
+								InputProps={{
+									className: "bg-[#FDF0E1]",
+								}}
+								sx={{
+									"& .MuiOutlinedInput-root": {
+										"& .MuiOutlinedInput-notchedOutline": {
+											borderWidth: "1px",
+											transition: "border-color 0.3s",
+										},
+										"&:hover .MuiOutlinedInput-notchedOutline": {
+											borderColor: "#CA7229",
+										},
+										"&.Mui-focused": {
+											"& .MuiOutlinedInput-notchedOutline": {
+												borderColor: "#CA7229",
+												borderWidth: "2px",
+											},
+
+											"& .MuiInputLabel-outlined": {
+												color: "#CA7229",
+												"&.Mui-focused": {
+													color: "#CA7229",
+												},
+											},
+										},
+									},
+
+									"& .MuiInputLabel-outlined": {
+										"&.Mui-focused": {
+											color: "#CA7229",
+										},
+									},
+								}}
+								{...field}
+							/>
+						)}
+					/>
+				</div>
+
+				<div className="flex justify-end">
 					<Button
 						type="submit"
 						sx={{
@@ -733,7 +880,7 @@ const Home = () => {
 					>
 						Submit
 					</Button>
-				</Box>
+				</div>
 			</form>
 		</FormProvider>
 	);
