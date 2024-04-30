@@ -117,7 +117,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch("http://localhost:3000/api/customer", {
+		const response = await fetch("http://localhost:3000/api/customers", {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
