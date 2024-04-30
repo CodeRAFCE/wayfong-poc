@@ -130,8 +130,6 @@ const Home = () => {
 		reset();
 	};
 
-	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
 	return (
 		<FormProvider {...methods}>
 			<form onSubmit={handleSubmit(handleOnSubmit)} className="max-w-screen-md mx-auto p-4">
@@ -224,32 +222,6 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<Box sx={{width: "100%"}}>
-						{/* <RHFTextField
-							name="phone"
-							label="Phone number*"
-							rules={{
-								required: {value: true, message: "This field is required!"},
-								pattern: {
-									value: /^[2-9]\d{2}\d{3}\d{4}$/,
-									message: "Invalid US phone number format! (e.g., XXX-XXX-XXXX)",
-								},
-							}}
-							size="small"
-							InputProps={{
-								className: "bg-[#FDF0E1]",
-								startAdornment: (
-									<InputAdornment position="start">
-										<div className="flex items-center gap-2">
-											<img src={usFlag} className="h-4" /> +1
-										</div>
-										<div className="px-4">
-											<Divider orientation="vertical" flexItem sx={{backgroundColor: "gray"}} />
-										</div>
-									</InputAdornment>
-								),
-								inputComponent: TextMaskCustom as any,
-							}}
-						/> */}
 						<Box sx={{height: "3.5em", maxHeight: "3.5em"}}>
 							<Controller
 								name="phone"
