@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
 	Box,
@@ -43,7 +43,7 @@ const Home = () => {
 	const {
 		handleSubmit,
 		control,
-		formState: {isValid, errors},
+		formState: {isValid, errors, isLoading},
 		reset,
 		watch,
 		setValue,
@@ -51,8 +51,6 @@ const Home = () => {
 	} = methods;
 
 	const values = watch();
-
-	console.log(errors);
 
 	const {append, remove, fields} = useFieldArray({
 		name: "products",
@@ -66,25 +64,6 @@ const Home = () => {
 
 		setValue("businessType", typeof value === "string" ? value.split(",") : value);
 	};
-
-	useEffect(() => {
-		const getCustomers = async () => {
-			const response = await fetch("http://localhost:3000/api/test", {
-				method: "POST",
-				body: JSON.stringify({hi: "TESTING THE NEW ENDPOINT"}),
-				headers: {
-					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin": "*",
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error("Uh-ho something went wrong!");
-			}
-		};
-
-		getCustomers();
-	}, []);
 
 	const handleOnSubmit: SubmitHandler<CustomerOnboardingFormData> = async ({
 		addressLine1,
@@ -138,7 +117,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		await fetch("http://localhost:3000/api/customers", {
+		const response = await fetch("http://localhost:3000/api/customer", {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -147,7 +126,7 @@ const Home = () => {
 			},
 		});
 
-		navigate("/thankyou");
+		navigate("/thankyou", {state: {status: response.status}});
 		reset();
 	};
 
@@ -878,7 +857,7 @@ const Home = () => {
 								cursor: "not-allowed",
 							},
 						}}
-						disabled={!isValid}
+						disabled={!isValid || isLoading}
 					>
 						Submit
 					</Button>

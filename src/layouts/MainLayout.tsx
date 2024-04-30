@@ -9,9 +9,9 @@ const MainLayout = () => {
 	return (
 		<Providers>
 			<CssBaseline />
-			<div className={"flex flex-col justify-between h-screen w-full"}>
+			<div className={"flex flex-col h-screen w-full"}>
 				{/* <Header /> */}
-				<div className="bg-[#80ca7b] items-center flex justify-between mb-4 h-40 px-7">
+				<div className="bg-[#80ca7b] items-center flex justify-between mb-4 h-20 px-7">
 					<img src={logo} className="py-2" />
 
 					<div className="flex items-center gap-8">
@@ -39,7 +39,7 @@ const MainLayout = () => {
 					</div>
 				</div>
 
-				<main className="w-full h-auto bg-hero-pattern bg-cover bg-no-repeat bg-center mt-4">
+				<main className="">
 					<Outlet />
 				</main>
 			</div>
