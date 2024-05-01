@@ -1,4 +1,5 @@
-import {CustomerOnboardingFormData} from "../../types/form.type";
+import { CustomerOnboardingFormData } from "../../types/form.type";
+import { TimeZones } from "../enums/time-zones";
 
 export const TIME_OPTIONS = [
 	"9 AM - 11 AM",
@@ -50,9 +51,10 @@ export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	email: "",
 	payTerm: "",
 	payType: "",
-	products: [{productName: "", orderFrequency: "", quantity: ""}],
+	products: [{ productName: "", orderFrequency: "", quantity: "" }],
 	isAlsoBillingAddress: false,
 	preferredTimeSlots: [],
+	preferredTimeZone: TimeZones.CST,
 	businessType: [],
 	interestedProductCategories: [],
 	turnOverPerAnnum: "",

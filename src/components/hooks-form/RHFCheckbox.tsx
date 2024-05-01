@@ -64,9 +64,9 @@ export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({ name, options, han
       rules={rules}
       render={({ field }) => {
         const onSelected = (option: string) => {
-          return field.value.includes(option)
-            ? field.value.filter((value: string) => value !== option)
-            : [...field.value, option];
+          return field?.value?.includes(option)
+            ? field?.value?.filter((value: string) => value !== option)
+            : [...field?.value, option];
         };
 
         return (
@@ -88,7 +88,7 @@ export const RHFMultiCheckbox: FC<RHFMultiCheckboxProps> = ({ name, options, han
                 key={option}
                 control={
                   <Checkbox
-                    checked={field.value.includes(option)}
+                    checked={field?.value?.includes(option)}
                     onChange={() => field.onChange(onSelected(option))}
                     sx={{
                       color: "#00AA5C",

@@ -1,3 +1,5 @@
+import { TimeZones } from "../shared/enums/time-zones";
+
 export type PreferredProducts = {
 	productName: string;
 	orderFrequency: string;
@@ -35,8 +37,8 @@ export interface CustomerOnboardingFormData {
 	id?: string | null;
 	companyName: string;
 	contactName: string;
-	phone: number | string;
-	businessType: string | string[];
+	phone: string;
+	businessType: string[];
 	email: string;
 	products: PreferredProducts[];
 	addressLine1: string;
@@ -46,6 +48,7 @@ export interface CustomerOnboardingFormData {
 	country: string;
 	zipCode: string;
 	preferredTimeSlots: string[];
+	preferredTimeZone: TimeZones;
 	interestedProductCategories: string[];
 	comment: string;
 	turnOverPerAnnum: number | string;

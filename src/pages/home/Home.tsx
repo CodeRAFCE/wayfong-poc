@@ -19,18 +19,19 @@ import { Plus, Trash } from "lucide-react";
 import { CustomerOnboardingFormData } from "../../types/form.type";
 import states from "../../components/us.json";
 import {
-  DEFAULT_VALUES,
   DELIVERY_OPTIONS,
   PAY_TERM,
   PAY_TYPE,
   PRODUCT_CATEGORY,
   BUSINESS_TYPE,
   TIME_OPTIONS,
+  DEFAULT_VALUES,
 } from "../../shared/utils/mock";
 import RHFTextField, { TextMaskCustom } from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import { RHFCheckbox, RHFMultiCheckbox } from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
+import { TimeZones } from "../../shared/enums/time-zones";
 
 const Home = () => {
   const [statesUS] = useState(states);
@@ -82,6 +83,7 @@ const Home = () => {
     phone,
     products,
     preferredTimeSlots,
+    preferredTimeZone,
     state,
     turnOverPerAnnum,
     zipCode,
@@ -106,6 +108,7 @@ const Home = () => {
       paymentType: payType,
       phoneNumber: phone,
       preferredTimeSlots: preferredTimeSlots,
+      preferredTimeZone,
       preferredProducts: products,
       turnOverPerAnnum,
       deliveryOption,
@@ -180,9 +183,9 @@ const Home = () => {
                 native: false,
                 sx: { textTransform: "capitalize" },
                 multiple: true,
-                renderValue: (selected) => selected.join(", "),
-                value: values.businessType,
-                onChange: (e: SelectChangeEvent<typeof values.businessType>) => handleBusinessTypeChange(e),
+                renderValue: (selected: unknown) => (selected as string[]).join(", "),
+                value: values.businessType ?? ([] as string[]),
+                onChange: (e: SelectChangeEvent<unknown>) => handleBusinessTypeChange(e as SelectChangeEvent<string[]>),
               }}
             >
               {BUSINESS_TYPE.map((option) => (
@@ -210,7 +213,7 @@ const Home = () => {
                         color: "#00AA5C",
                       },
                     }}
-                    checked={values.businessType.indexOf(option) > -1}
+                    checked={values?.businessType?.indexOf(option) > -1}
                   />
                   <ListItemText primary={option} sx={{ p: 0.5 }} />
                 </MenuItem>
@@ -703,6 +706,42 @@ const Home = () => {
           <label htmlFor="" className="font-semibold">
             Preferred time to contact*
           </label>
+          <div className="w-1/2 my-4">
+            <Box sx={{ width: "100%" }}>
+              <RHFSelect
+                fullWidth
+                name="preferredTimeZone"
+                label="Preferred Time Zone*"
+                rules={{
+                  required: { value: true, message: "This field is required!" },
+                }}
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  className: "bg-[#FDF0E1]",
+                }}
+                SelectProps={{
+                  native: false,
+                  sx: { textTransform: "capitalize" },
+                }}
+              >
+                {Object.values(TimeZones).map((timeZone, index) => (
+                  <MenuItem
+                    key={`time-zone-${index}`}
+                    value={timeZone}
+                    sx={{
+                      mx: 0.5,
+                      my: 0.5,
+                      borderRadius: 0.75,
+                      typography: "body2",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {timeZone}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+            </Box>
+          </div>
           <div>
             {/* TODO: Time validation pending */}
             <RHFMultiCheckbox
