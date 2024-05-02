@@ -34,7 +34,6 @@ import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 import {TimeZones} from "../../shared/enums/time-zones";
-import {CustomSlider} from "./Home.style";
 
 const Home = () => {
 	const [statesUS] = useState(states);
@@ -47,11 +46,10 @@ const Home = () => {
 	const {
 		handleSubmit,
 		control,
-		formState: {isValid, errors, isLoading, touchedFields},
+		formState: {isValid, isLoading},
 		reset,
 		watch,
 		setValue,
-		setError,
 	} = methods;
 
 	const values = watch();
@@ -772,6 +770,7 @@ const Home = () => {
 									productName: "",
 									orderFrequency: "",
 									quantity: "",
+									quantityUnit: ""
 								})
 							}
 						>
