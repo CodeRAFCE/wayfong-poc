@@ -1,9 +1,10 @@
-import { TimeZones } from "../shared/enums/time-zones";
+import {TimeZones} from "../shared/enums/time-zones";
 
 export type PreferredProducts = {
 	productName: string;
 	orderFrequency: string;
 	quantity: number | string;
+	quantityUnit: string;
 };
 
 export type ShippingAddress = {

@@ -26,12 +26,15 @@ import {
 	BUSINESS_TYPE,
 	TIME_OPTIONS,
 	DEFAULT_VALUES,
+	COMPANY_TURNOVER,
+	UNIT,
 } from "../../shared/utils/mock";
 import RHFTextField, {TextMaskCustom} from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 import {TimeZones} from "../../shared/enums/time-zones";
+import {CustomSlider} from "./Home.style";
 
 const Home = () => {
 	const [statesUS] = useState(states);
@@ -503,8 +506,19 @@ const Home = () => {
 				</div>
 
 				<div className="w-full mb-4">
+					<Typography
+						variant="subtitle2"
+						sx={{
+							mb: "14px",
+							color: "#9E4900",
+							fontWeight: "600",
+							fontSize: "16px",
+						}}
+					>
+						Company turnover per annum <span className="text-red-600">*</span>
+					</Typography>
 					<Box sx={{width: "100%"}}>
-						<RHFTextField
+						{/* <RHFTextField
 							name="turnOverPerAnnum"
 							label="Company's Turnover (per annum)"
 							type="number"
@@ -524,6 +538,13 @@ const Home = () => {
 									</InputAdornment>
 								),
 							}}
+						/> */}
+						<RHFRadioGroup
+							rules={{
+								required: {value: true, message: "This field is required!"},
+							}}
+							name="turnOverPerAnnum"
+							options={COMPANY_TURNOVER}
 						/>
 					</Box>
 				</div>
@@ -613,7 +634,7 @@ const Home = () => {
 										/>
 									</div>
 
-									<div className="grid grid-cols-2 gap-2">
+									<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
 										<div className="w-full">
 											<RHFSelect
 												fullWidth
@@ -660,7 +681,7 @@ const Home = () => {
 													},
 												}}
 												size="small"
-												name={`products.${index}.quantity`}
+												name={`products.${index}.quantityUnit`}
 												InputProps={{
 													className: "bg-[#FDF0E1]",
 												}}
@@ -668,9 +689,46 @@ const Home = () => {
 												type="number"
 											/>
 										</div>
+										<div className="w-full">
+											<RHFSelect
+												fullWidth
+												name={`products.${index}.unit`}
+												label="Unit"
+												rules={{
+													required: {
+														value: true,
+														message: "This field is required!",
+													},
+												}}
+												InputLabelProps={{shrink: true}}
+												InputProps={{
+													className: "bg-[#FDF0E1]",
+												}}
+												SelectProps={{
+													native: false,
+													sx: {textTransform: "capitalize"},
+												}}
+											>
+												{UNIT.map((option) => (
+													<MenuItem
+														key={option}
+														value={option}
+														sx={{
+															mx: 1,
+															my: 0.5,
+															borderRadius: 0.75,
+															typography: "body2",
+															textTransform: "capitalize",
+														}}
+													>
+														{option}
+													</MenuItem>
+												))}
+											</RHFSelect>
+										</div>
 									</div>
 
-									{fields.length > 2 && (
+									{fields?.length > 2 && (
 										<>
 											<div className="flex items-center justify-end gap-1 mt-4">
 												<span className="font-semibold">Delete</span>
@@ -721,6 +779,12 @@ const Home = () => {
 						</IconButton>{" "}
 						<span>Add Product</span>
 					</div>
+
+					{fields?.length <= 1 && (
+						<FormHelperText error>
+							Make sure at least two preferred products are added
+						</FormHelperText>
+					)}
 				</div>
 
 				<div className="w-full mb-4">
@@ -831,7 +895,7 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Comment*
+						Comment
 					</label>
 
 					{/* <RHFTextField
@@ -850,9 +914,6 @@ const Home = () => {
 					<Controller
 						name={"comment"}
 						control={control}
-						rules={{
-							required: {value: true, message: "This field is required!"},
-						}}
 						render={({field, fieldState: {error}}) => (
 							<TextField
 								fullWidth
