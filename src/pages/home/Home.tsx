@@ -27,13 +27,13 @@ import {
 	TIME_OPTIONS,
 	DEFAULT_VALUES,
 	COMPANY_TURNOVER,
-	UNIT,
 } from "../../shared/utils/mock";
 import RHFTextField, {TextMaskCustom} from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
 import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFCheckbox";
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 import {TimeZones} from "../../shared/enums/time-zones";
+import ProductQuantityUnits from "../../shared/enums/product-quantity-units";
 
 const Home = () => {
 	const [statesUS] = useState(states);
@@ -151,7 +151,8 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="companyName"
-							label="Company Name*"
+							label="Company Name"
+							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
 							}}
@@ -165,7 +166,8 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="contactName"
-							label="Contact Person*"
+							label="Contact Person"
+							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
 							}}
@@ -182,7 +184,8 @@ const Home = () => {
 						<RHFSelect
 							fullWidth
 							name="businessType"
-							label="Business Type*"
+							label="Business Type"
+							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
 							}}
@@ -247,7 +250,8 @@ const Home = () => {
 									return (
 										<TextField
 											fullWidth
-											label="Phone Number*"
+											label="Phone Number"
+											required
 											InputProps={{
 												inputComponent: TextMaskCustom as any,
 												className: "bg-[#FDF0E1]",
@@ -313,7 +317,8 @@ const Home = () => {
 						<RHFTextField
 							name="email"
 							type="email"
-							label="Email Address*"
+							label="Email Address"
+							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
 								pattern: {
@@ -338,14 +343,18 @@ const Home = () => {
 						fontSize: "16px",
 					}}
 				>
-					Shipping Address
+					Shipping Address{" "}
+					<Box component="span" color="red">
+						*
+					</Box>
 				</Typography>
 
 				<div className="w-full mb-4">
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="addressLine1"
-							label="Address Line 1*"
+							label="Address Line 1"
+							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
 							}}
@@ -375,7 +384,8 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="zipCode"
-								label="ZipCode*"
+								label="ZipCode"
+								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 									pattern: {
@@ -394,7 +404,8 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="city"
-								label="City*"
+								label="City"
+								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 								}}
@@ -411,7 +422,8 @@ const Home = () => {
 							<RHFSelect
 								fullWidth
 								name="state"
-								label="State*"
+								label="State"
+								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 								}}
@@ -448,6 +460,7 @@ const Home = () => {
 							<RHFTextField
 								name="country"
 								label="Country"
+								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 								}}
@@ -478,7 +491,11 @@ const Home = () => {
 						Payment Information
 					</Typography>
 					<label htmlFor="" className="font-semibold">
-						Pay Term*:
+						Pay Term{" "}
+						<Box component="span" color="red">
+							*
+						</Box>
+						:
 					</label>
 					{/* TODO: rules is pending */}
 					<RHFRadioGroup
@@ -492,7 +509,11 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Pay Type*:
+						Pay Type{" "}
+						<Box component="span" color="red">
+							*
+						</Box>
+						:
 					</label>
 					<RHFRadioGroup
 						rules={{
@@ -609,7 +630,11 @@ const Home = () => {
 
 				<div className="w-full mb-8">
 					<label htmlFor="" className="font-semibold">
-						Preferred Products:
+						Preferred Products{" "}
+						<Box component="span" color="red">
+							*
+						</Box>
+						:
 					</label>
 					<Box>
 						{fields.map((field, index) => {
@@ -623,12 +648,13 @@ const Home = () => {
 													message: "This field is required!",
 												},
 											}}
+											required
 											size="small"
 											name={`products.${index}.productName`}
 											InputProps={{
 												className: "bg-[#FDF0E1]",
 											}}
-											label="Preferred Products*"
+											label="Preferred Products"
 										/>
 									</div>
 
@@ -637,7 +663,8 @@ const Home = () => {
 											<RHFSelect
 												fullWidth
 												name={`products.${index}.orderFrequency`}
-												label="Order Frequency*"
+												label="Order Frequency"
+												required
 												rules={{
 													required: {
 														value: true,
@@ -679,19 +706,20 @@ const Home = () => {
 													},
 												}}
 												size="small"
-												name={`products.${index}.quantityUnit`}
+												name={`products.${index}.quantity`}
 												InputProps={{
 													className: "bg-[#FDF0E1]",
 												}}
 												label="Quantity"
 												type="number"
+												required
 											/>
 										</div>
 										<div className="w-full">
 											<RHFSelect
 												fullWidth
-												name={`products.${index}.unit`}
-												label="Unit"
+												name={`products.${index}.quantityUnit`}
+												label="Quantity Unit"
 												rules={{
 													required: {
 														value: true,
@@ -706,8 +734,9 @@ const Home = () => {
 													native: false,
 													sx: {textTransform: "capitalize"},
 												}}
+												required
 											>
-												{UNIT.map((option) => (
+												{Object.values(ProductQuantityUnits).map((option) => (
 													<MenuItem
 														key={option}
 														value={option}
@@ -770,7 +799,7 @@ const Home = () => {
 									productName: "",
 									orderFrequency: "",
 									quantity: "",
-									quantityUnit: ""
+									quantityUnit: "",
 								})
 							}
 						>
@@ -826,7 +855,10 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Preferred time to contact*
+						Preferred time to contact{" "}
+						<Box component="span" color="red">
+							*
+						</Box>
 					</label>
 					<div className="w-1/2 my-4">
 						<Box sx={{width: "100%"}}>

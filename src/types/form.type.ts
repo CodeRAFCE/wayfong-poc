@@ -3,7 +3,7 @@ import {TimeZones} from "../shared/enums/time-zones";
 export type PreferredProducts = {
 	productName: string;
 	orderFrequency: string;
-	quantity: number | string;
+	quantity: number;
 	quantityUnit: string;
 };
 
