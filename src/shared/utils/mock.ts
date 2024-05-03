@@ -58,7 +58,7 @@ export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	email: "",
 	payTerm: "",
 	payType: "",
-	products: [{productName: "", orderFrequency: "", quantity: "", quantityUnit: "Lbs"}],
+	products: [{productName: "", orderFrequency: "", quantity: 1, quantityUnit: "Lbs"}],
 	isAlsoBillingAddress: false,
 	preferredTimeSlots: [],
 	preferredTimeZone: TimeZones.CST,
