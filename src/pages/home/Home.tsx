@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {FunctionComponent, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
 	Box,
@@ -8,6 +8,7 @@ import {
 	FormHelperText,
 	IconButton,
 	InputAdornment,
+	InputBaseComponentProps,
 	ListItemText,
 	MenuItem,
 	SelectChangeEvent,
@@ -253,7 +254,8 @@ const Home = () => {
 											label="Phone Number"
 											required
 											InputProps={{
-												inputComponent: TextMaskCustom as any,
+												inputComponent:
+													TextMaskCustom as unknown as FunctionComponent<InputBaseComponentProps>,
 												className: "bg-[#FDF0E1]",
 												startAdornment: (
 													<InputAdornment position="start">
@@ -798,7 +800,7 @@ const Home = () => {
 								append({
 									productName: "",
 									orderFrequency: "",
-									quantity: "",
+									quantity: 1,
 									quantityUnit: "",
 								})
 							}

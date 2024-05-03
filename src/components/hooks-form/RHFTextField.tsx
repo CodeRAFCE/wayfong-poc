@@ -17,16 +17,18 @@ export const TextMaskCustom = forwardRef<HTMLInputElement, CustomProps>(function
 	props,
 	ref
 ) {
-	const {onChange, ...other} = props;
+	const {onChange, name, ...other} = props;
+
 	return (
 		<IMaskInput
 			{...other}
+			name={name}
 			mask="(000)-000-0000"
 			definitions={{
 				"#": /[1-9]/,
 			}}
-			inputRef={ref}
-			onAccept={(value: string) => onChange({target: {name: props.name, value}})}
+			ref={ref}
+			onAccept={(value: string) => onChange({target: {name, value}})}
 			overwrite
 		/>
 	);
