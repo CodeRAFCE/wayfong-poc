@@ -132,7 +132,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch("http://localhost:3000/api/customers", {
+		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
