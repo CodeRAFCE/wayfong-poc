@@ -22,7 +22,7 @@ export const COMPANY_TURNOVER = [
 	"Less than $10K",
 	"$10k to $100K",
 	"$100K to $1M",
-	"Greater Than 1M",
+	"Greater Than $1M",
 ];
 export const PRODUCT_CATEGORY = [
 	"General",

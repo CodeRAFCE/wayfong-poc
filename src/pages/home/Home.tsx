@@ -1,4 +1,4 @@
-import {FunctionComponent, useState} from "react";
+import {FunctionComponent} from "react";
 import {useNavigate} from "react-router-dom";
 import {
 	Box,
@@ -18,7 +18,6 @@ import {
 import {Controller, FormProvider, SubmitHandler, useFieldArray, useForm} from "react-hook-form";
 import {Plus, Trash} from "lucide-react";
 import {CustomerOnboardingFormData} from "../../types/form.type";
-import states from "../../components/us.json";
 import {
 	DELIVERY_OPTIONS,
 	PAY_TERM,
@@ -37,7 +36,6 @@ import {TimeZones} from "../../shared/enums/time-zones";
 import ProductQuantityUnits from "../../shared/enums/product-quantity-units";
 
 const Home = () => {
-	const [statesUS] = useState(states);
 	const navigate = useNavigate();
 	const methods = useForm<CustomerOnboardingFormData>({
 		mode: "all",
@@ -59,6 +57,8 @@ const Home = () => {
 		name: "products",
 		control,
 	});
+
+	useEffect
 
 	const handleBusinessTypeChange = (event: SelectChangeEvent<typeof values.businessType>) => {
 		const {
@@ -132,7 +132,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
+		const response = await fetch(`https://wayfong.tech-demo.in:3001/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -156,6 +156,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
+								maxLength: {
+									value: 27,
+									message: "You have reached your limit on the maximum characters",
+								},
 							}}
 							size="small"
 							InputProps={{
@@ -171,6 +175,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
+								maxLength: {
+									value: 15,
+									message: "You have reached your limit on the maximum characters",
+								},
 							}}
 							size="small"
 							InputProps={{
@@ -359,6 +367,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: "This field is required!"},
+								maxLength: {
+									value: 40,
+									message: "You have reached your limit on the maximum characters",
+								},
 							}}
 							size="small"
 							InputProps={{
@@ -373,6 +385,12 @@ const Home = () => {
 						<RHFTextField
 							name="addressLine2"
 							label="Address Line 2"
+							rules={{
+								maxLength: {
+									value: 40,
+									message: "You have reached your limit on the maximum characters",
+								},
+							}}
 							size="small"
 							InputProps={{
 								className: "bg-[#FDF0E1]",
@@ -391,8 +409,12 @@ const Home = () => {
 								rules={{
 									required: {value: true, message: "This field is required!"},
 									pattern: {
-										value: /^\d{6}$/,
-										message: "Zip code must be a six-digit number!",
+										value: /^\d{5}$/,
+										message: "Zip code must be a five-digit number!",
+									},
+									maxLength: {
+										value: 5,
+										message: "You have reached your limit on the maximum characters",
 									},
 								}}
 								size="small"
@@ -402,11 +424,13 @@ const Home = () => {
 							/>
 						</Box>
 					</div>
+
 					<div className="w-full mb-4">
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="city"
 								label="City"
+								disabled
 								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
@@ -421,39 +445,19 @@ const Home = () => {
 
 					<div className="w-full mb-4">
 						<Box sx={{width: "100%"}}>
-							<RHFSelect
-								fullWidth
+							<RHFTextField
 								name="state"
-								label="State"
+								label="state"
+								disabled
 								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 								}}
-								InputLabelProps={{shrink: true}}
+								size="small"
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
-								SelectProps={{
-									native: false,
-									sx: {textTransform: "capitalize"},
-								}}
-							>
-								{statesUS.map(({abbreviation, name}) => (
-									<MenuItem
-										key={abbreviation}
-										value={name}
-										sx={{
-											mx: 0.5,
-											my: 0.5,
-											borderRadius: 0.75,
-											typography: "body2",
-											textTransform: "capitalize",
-										}}
-									>
-										{name}
-									</MenuItem>
-								))}
-							</RHFSelect>
+							/>
 						</Box>
 					</div>
 
@@ -649,6 +653,10 @@ const Home = () => {
 													value: true,
 													message: "This field is required!",
 												},
+												maxLength: {
+													value: 15,
+													message: "You have reached your limit on the maximum characters",
+												},
 											}}
 											required
 											size="small"
@@ -705,6 +713,10 @@ const Home = () => {
 													required: {
 														value: true,
 														message: "This field is required!",
+													},
+													maxLength: {
+														value: 4,
+														message: "You have reached your limit on the maximum characters",
 													},
 												}}
 												size="small"
@@ -947,6 +959,12 @@ const Home = () => {
 					<Controller
 						name={"comment"}
 						control={control}
+						rules={{
+							maxLength: {
+								value: 300,
+								message: "You have reached your limit on the maximum characters",
+							},
+						}}
 						render={({field, fieldState: {error}}) => (
 							<TextField
 								fullWidth

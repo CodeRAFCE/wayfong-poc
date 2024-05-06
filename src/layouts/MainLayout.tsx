@@ -27,7 +27,7 @@ const MainLayout = () => {
 							<h1 className="text-2xl font-semibold text-white xl:text-4xl">Welcome to Way Fong</h1>
 						</div>
 						<div className="p-3">
-							<p>Enter your detail for us to connect with you.</p>
+							<p>Please enter your details for us to connect with you</p>
 							<a
 								href="https://wayfong.com"
 								target="_blank"
