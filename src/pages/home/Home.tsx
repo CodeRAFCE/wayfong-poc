@@ -58,7 +58,6 @@ const Home = () => {
 		control,
 	});
 
-	useEffect
 
 	const handleBusinessTypeChange = (event: SelectChangeEvent<typeof values.businessType>) => {
 		const {
