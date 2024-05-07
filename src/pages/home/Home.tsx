@@ -469,7 +469,7 @@ const Home = () => {
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
-								inputProps={{maxLength: 80}}
+								inputProps={{maxLength: 28}}
 							/>
 						</Box>
 					</div>
@@ -722,10 +722,6 @@ const Home = () => {
 													value: true,
 													message: "This field is required!",
 												},
-												maxLength: {
-													value: 15,
-													message: "You have reached your limit on the maximum characters",
-												},
 											}}
 											required
 											size="small"
@@ -734,6 +730,7 @@ const Home = () => {
 												className: "bg-[#FDF0E1]",
 											}}
 											label="Preferred Products"
+											inputProps={{maxLength: 30}}
 										/>
 									</div>
 
