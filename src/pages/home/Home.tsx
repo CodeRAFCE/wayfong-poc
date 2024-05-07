@@ -153,7 +153,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
+		const response = await fetch(`https://wayfongonline.com:3001/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -997,9 +997,6 @@ const Home = () => {
 					</div>
 
 					<FormHelperText>**Select at least 2 slots</FormHelperText>
-					{(!values.preferredTimeSlots || values?.preferredTimeSlots.length < 2) && (
-						<FormHelperText error>{`Make sure at least two time slots are checked`}</FormHelperText>
-					)}
 				</div>
 
 				<div className="w-full mb-4">
