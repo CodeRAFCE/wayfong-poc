@@ -7,6 +7,7 @@ import {
 	Divider,
 	FormHelperText,
 	IconButton,
+	Input,
 	InputAdornment,
 	InputBaseComponentProps,
 	ListItemText,
@@ -34,6 +35,7 @@ import {RHFCheckbox, RHFMultiCheckbox} from "../../components/hooks-form/RHFChec
 import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 import {TimeZones} from "../../shared/enums/time-zones";
 import ProductQuantityUnits from "../../shared/enums/product-quantity-units";
+import CompanyTurnOver from "../../shared/enums/company-turnover";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -58,6 +60,27 @@ const Home = () => {
 		control,
 	});
 
+	// useEffect(() => {
+	// 	const zipCodeAutoPopulate = async () => {
+	// 		const response = await fetch("");
+
+	// 		if (!response.ok) {
+	// 			throw new Error("Something went wrong");
+	// 		}
+	// 		const data = await response.json();
+
+	// 		if (!data.zipCode) {
+	// 			setError("zipCode", {message: "Uh-oh the provided zip code does not exist in USA"});
+	// 			setError("city", {message: "Uh-oh the provided zip code does not exist in USA"});
+	// 			setError("state", {message: "Uh-oh the provided zip code does not exist in USA"});
+	// 		} else {
+	// 			setValue("city", data?.city);
+	// 			setValue("state", data?.state);
+	// 		}
+	// 	};
+
+	// 	zipCodeAutoPopulate();
+	// }, [setError, setValue]);
 
 	const handleBusinessTypeChange = (event: SelectChangeEvent<typeof values.businessType>) => {
 		const {
@@ -131,7 +154,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch(`https://wayfong.tech-demo.in:3001/api/customers`, {
+		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -164,6 +187,7 @@ const Home = () => {
 							InputProps={{
 								className: "bg-[#FDF0E1]",
 							}}
+							inputProps={{maxLength: 27}}
 						/>
 					</Box>
 
@@ -175,7 +199,7 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: "This field is required!"},
 								maxLength: {
-									value: 15,
+									value: 27,
 									message: "You have reached your limit on the maximum characters",
 								},
 							}}
@@ -183,6 +207,7 @@ const Home = () => {
 							InputProps={{
 								className: "bg-[#FDF0E1]",
 							}}
+							inputProps={{maxLength: 27}}
 						/>
 					</Box>
 				</div>
@@ -339,6 +364,7 @@ const Home = () => {
 							InputProps={{
 								className: "bg-[#FDF0E1]",
 							}}
+							inputProps={{maxLength: 320}}
 						/>
 					</Box>
 				</div>
@@ -375,6 +401,7 @@ const Home = () => {
 							InputProps={{
 								className: "bg-[#FDF0E1]",
 							}}
+							inputProps={{maxLength: 30}}
 						/>
 					</Box>
 				</div>
@@ -394,6 +421,7 @@ const Home = () => {
 							InputProps={{
 								className: "bg-[#FDF0E1]",
 							}}
+							inputProps={{maxLength: 30}}
 						/>
 					</Box>
 				</div>
@@ -403,22 +431,22 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="zipCode"
-								label="ZipCode"
+								label="Zip Code"
+								type="number"
 								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
 									pattern: {
 										value: /^\d{5}$/,
-										message: "Zip code must be a five-digit number!",
-									},
-									maxLength: {
-										value: 5,
-										message: "You have reached your limit on the maximum characters",
+										message: "Zip code must be a 5 digit number!",
 									},
 								}}
 								size="small"
 								InputProps={{
 									className: "bg-[#FDF0E1]",
+								}}
+								onInput={(e) => {
+									e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 5);
 								}}
 							/>
 						</Box>
@@ -429,7 +457,6 @@ const Home = () => {
 							<RHFTextField
 								name="city"
 								label="City"
-								disabled
 								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
@@ -438,6 +465,7 @@ const Home = () => {
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
+								inputProps={{maxLength: 80}}
 							/>
 						</Box>
 					</div>
@@ -447,7 +475,6 @@ const Home = () => {
 							<RHFTextField
 								name="state"
 								label="state"
-								disabled
 								required
 								rules={{
 									required: {value: true, message: "This field is required!"},
@@ -456,6 +483,7 @@ const Home = () => {
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
+								inputProps={{maxLength: 80}}
 							/>
 						</Box>
 					</div>
@@ -474,6 +502,7 @@ const Home = () => {
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
+								inputProps={{maxLength: 3}}
 							/>
 						</Box>
 					</div>
@@ -541,8 +570,9 @@ const Home = () => {
 					>
 						Company turnover per annum <span className="text-red-600">*</span>
 					</Typography>
+
 					<Box sx={{width: "100%"}}>
-						{/* <RHFTextField
+						<RHFSelect
 							name="turnOverPerAnnum"
 							label="Company's Turnover (per annum)"
 							type="number"
@@ -561,15 +591,32 @@ const Home = () => {
 										</div>
 									</InputAdornment>
 								),
+								size: "small",
 							}}
-						/> */}
-						<RHFRadioGroup
-							rules={{
-								required: {value: true, message: "This field is required!"},
+							SelectProps={{
+								native: false,
+								sx: {textTransform: "capitalize"},
+								size: "small",
 							}}
-							name="turnOverPerAnnum"
-							options={COMPANY_TURNOVER}
-						/>
+						>
+							{Object.values(CompanyTurnOver).map((option) => (
+								<MenuItem
+									key={option}
+									value={option}
+									sx={{
+										textTransform: "capitalize",
+										bgcolor: "",
+										"&.MuiMenuItem-root": {
+											"&.Mui-selected": {
+												backgroundColor: "rgba(12, 133, 9, 0.1)",
+											},
+										},
+									}}
+								>
+									<ListItemText primary={option} />
+								</MenuItem>
+							))}
+						</RHFSelect>
 					</Box>
 				</div>
 
@@ -713,10 +760,6 @@ const Home = () => {
 														value: true,
 														message: "This field is required!",
 													},
-													maxLength: {
-														value: 4,
-														message: "You have reached your limit on the maximum characters",
-													},
 												}}
 												size="small"
 												name={`products.${index}.quantity`}
@@ -726,6 +769,11 @@ const Home = () => {
 												label="Quantity"
 												type="number"
 												required
+												onInput={(e: React.FormEvent<HTMLDivElement>) => {
+													e.target.value = Math.max(0, parseInt(e.target?.value))
+														.toString()
+														.slice(0, 5);
+												}}
 											/>
 										</div>
 										<div className="w-full">
@@ -812,7 +860,7 @@ const Home = () => {
 									productName: "",
 									orderFrequency: "",
 									quantity: 1,
-									quantityUnit: "",
+									quantityUnit: "lbs",
 								})
 							}
 						>
@@ -820,12 +868,6 @@ const Home = () => {
 						</IconButton>{" "}
 						<span>Add Product</span>
 					</div>
-
-					{fields?.length <= 1 && (
-						<FormHelperText error>
-							Make sure at least two preferred products are added
-						</FormHelperText>
-					)}
 				</div>
 
 				<div className="w-full mb-4">
@@ -960,7 +1002,7 @@ const Home = () => {
 						control={control}
 						rules={{
 							maxLength: {
-								value: 300,
+								value: 320,
 								message: "You have reached your limit on the maximum characters",
 							},
 						}}
@@ -1004,6 +1046,7 @@ const Home = () => {
 										},
 									},
 								}}
+								inputProps={{maxLength: 320}}
 								{...field}
 							/>
 						)}

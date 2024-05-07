@@ -1,5 +1,5 @@
 enum ProductQuantityUnits {
-	Lbs = "Lbs",
+	Lbs = "lbs",
 	Cases = "Cases",
 }
 

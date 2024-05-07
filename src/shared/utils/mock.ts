@@ -16,7 +16,7 @@ export const DELIVERY_OPTIONS = [
 	"Deliver to Trucking Company",
 ];
 export const PAY_TERM = ["Weekly", "Bi-Monthly", "Monthly", "Quarterly"];
-export const UNIT = ["Lbs", "Cases"];
+export const UNIT = ["lbs", "Cases"];
 export const PAY_TYPE = ["Cash", "Card", "Cheque", "ACH"];
 export const COMPANY_TURNOVER = [
 	"Less than $10K",
@@ -58,7 +58,10 @@ export const DEFAULT_VALUES: CustomerOnboardingFormData = {
 	email: "",
 	payTerm: "",
 	payType: "",
-	products: [{productName: "", orderFrequency: "", quantity: 1, quantityUnit: "Lbs"}],
+	products: [
+		{productName: "", orderFrequency: "", quantity: 1, quantityUnit: "lbs"},
+		{productName: "", orderFrequency: "", quantity: 1, quantityUnit: "lbs"},
+	],
 	isAlsoBillingAddress: false,
 	preferredTimeSlots: [],
 	preferredTimeZone: TimeZones.CST,
