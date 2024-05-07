@@ -7,7 +7,6 @@ import {
 	Divider,
 	FormHelperText,
 	IconButton,
-	Input,
 	InputAdornment,
 	InputBaseComponentProps,
 	ListItemText,
@@ -27,7 +26,6 @@ import {
 	BUSINESS_TYPE,
 	TIME_OPTIONS,
 	DEFAULT_VALUES,
-	COMPANY_TURNOVER,
 } from "../../shared/utils/mock";
 import RHFTextField, {TextMaskCustom} from "../../components/hooks-form/RHFTextField";
 import RHFSelect from "../../components/hooks-form/RHFSelect";
@@ -36,6 +34,7 @@ import RHFRadioGroup from "../../components/hooks-form/RHFRadioGroup";
 import {TimeZones} from "../../shared/enums/time-zones";
 import ProductQuantityUnits from "../../shared/enums/product-quantity-units";
 import CompanyTurnOver from "../../shared/enums/company-turnover";
+import statesUS from "../../components/us.json";
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -445,9 +444,14 @@ const Home = () => {
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
-								onInput={(e) => {
-									e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 5);
-								}}
+								onInput={(e) =>
+									((e.target as HTMLInputElement).value = Math.max(
+										0,
+										parseInt((e.target as HTMLInputElement).value)
+									)
+										.toString()
+										.slice(0, 5))
+								}
 							/>
 						</Box>
 					</div>
@@ -472,19 +476,38 @@ const Home = () => {
 
 					<div className="w-full mb-4">
 						<Box sx={{width: "100%"}}>
-							<RHFTextField
+							<RHFSelect
+								fullWidth
 								name="state"
-								label="state"
-								required
+								label="State*"
 								rules={{
 									required: {value: true, message: "This field is required!"},
 								}}
-								size="small"
+								InputLabelProps={{shrink: true}}
 								InputProps={{
 									className: "bg-[#FDF0E1]",
 								}}
-								inputProps={{maxLength: 80}}
-							/>
+								SelectProps={{
+									native: false,
+									sx: {textTransform: "capitalize"},
+								}}
+							>
+								{statesUS.map(({abbreviation, name}) => (
+									<MenuItem
+										key={abbreviation}
+										value={name}
+										sx={{
+											mx: 0.5,
+											my: 0.5,
+											borderRadius: 0.75,
+											typography: "body2",
+											textTransform: "capitalize",
+										}}
+									>
+										{name}
+									</MenuItem>
+								))}
+							</RHFSelect>
 						</Box>
 					</div>
 
@@ -769,11 +792,14 @@ const Home = () => {
 												label="Quantity"
 												type="number"
 												required
-												onInput={(e: React.FormEvent<HTMLDivElement>) => {
-													e.target.value = Math.max(0, parseInt(e.target?.value))
+												onInput={(e) =>
+													((e.target as HTMLInputElement).value = Math.max(
+														0,
+														parseInt((e.target as HTMLInputElement).value)
+													)
 														.toString()
-														.slice(0, 5);
-												}}
+														.slice(0, 5))
+												}
 											/>
 										</div>
 										<div className="w-full">
