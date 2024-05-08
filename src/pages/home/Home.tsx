@@ -153,7 +153,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch(`https://wayfongonline.com:3001/api/customers`, {
+		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
