@@ -122,7 +122,6 @@ const Home = () => {
 		zipCode,
 	}) => {
 		const productDetails = {
-			registrationId: "12J123",
 			shippingAddress: {
 				line1: addressLine1,
 				line2: addressLine2,
