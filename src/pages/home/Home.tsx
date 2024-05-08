@@ -152,7 +152,7 @@ const Home = () => {
 
 		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
 
-		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
+		const response = await fetch(`https://wayfong-server-v2-g74l.onrender.com/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -1095,7 +1095,7 @@ const Home = () => {
 								cursor: "not-allowed",
 							},
 						}}
-						disabled={!isValid || isLoading}
+						disabled={!isValid || values.preferredTimeSlots.length < 2 || isLoading}
 					>
 						Submit
 					</Button>
