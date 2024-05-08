@@ -54,6 +54,8 @@ const Home = () => {
 
 	const values = watch();
 
+	console.log(values.isAlsoBillingAddress);
+
 	const {append, remove, fields} = useFieldArray({
 		name: "products",
 		control,
@@ -146,13 +148,8 @@ const Home = () => {
 			deliveryOption,
 		};
 
-		// const itemsInCompare = JSON.parse(localStorage.getItem("itemsInCompare") || "[]");
-
-		// itemsInCompare.push(productDetails);
-
-		// localStorage.setItem("itemsInCompare", JSON.stringify(itemsInCompare));
-
-		const response = await fetch(`https://wayfong-server-v2-g74l.onrender.com/api/customers`, {
+		//${import.meta.env.VITE_SERVER_API}
+		const response = await fetch(`https://wayfongonline.com:3001/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -531,7 +528,7 @@ const Home = () => {
 				</div>
 
 				<div className="w-full mb-4">
-					<RHFCheckbox label="Use it as my Billing Address" name="isAlSoBillingAddress" />
+					<RHFCheckbox label="Use it as my Billing Address" name="isAlsoBillingAddress" />	
 				</div>
 
 				<div className="w-full mb-4">
