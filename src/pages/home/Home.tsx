@@ -149,7 +149,8 @@ const Home = () => {
 		};
 
 		//${import.meta.env.VITE_SERVER_API}
-		const response = await fetch(`https://wayfongonline.com:3001/api/customers`, {
+		const response = await fetch(`${import.meta.env.VITE_SERVER_API}/api/customers`, {
+			// const response = await fetch(`https://wayfongonline.com/console/api/customers`, {
 			method: "POST",
 			body: JSON.stringify(productDetails),
 			headers: {
@@ -528,7 +529,7 @@ const Home = () => {
 				</div>
 
 				<div className="w-full mb-4">
-					<RHFCheckbox label="Use it as my Billing Address" name="isAlsoBillingAddress" />	
+					<RHFCheckbox label="Use it as my Billing Address" name="isAlsoBillingAddress" />
 				</div>
 
 				<div className="w-full mb-4">
@@ -1017,6 +1018,10 @@ const Home = () => {
 						name={"comment"}
 						control={control}
 						rules={{
+							required: {
+								value: true,
+								message: "This is field is required!",
+							},
 							maxLength: {
 								value: 320,
 								message: "You have reached your limit on the maximum characters",
