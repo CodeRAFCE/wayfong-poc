@@ -3,9 +3,20 @@ import {Link, Outlet} from "react-router-dom";
 import logo from "/logo.webp";
 
 import Providers from "../components/Providers";
-import {CssBaseline} from "@mui/material";
+import {Box, CssBaseline, MenuItem, TextField} from "@mui/material";
+import {useState} from "react";
+
+const LANG_DATA = [
+	{value: "en", flag: English},
+	{value: "ch", flag: China},
+];
 
 const MainLayout = () => {
+	const [country, setCountry] = useState(English);
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		setCountry(event.target.value);
+	};
 	return (
 		<Providers>
 			<CssBaseline />
@@ -23,8 +34,35 @@ const MainLayout = () => {
 
 				<div className="px-4 w-full mx-auto">
 					<div className="border border-[#ce7428] rounded-t-xl ">
-						<div className="bg-[#ce7428] rounded-t-xl p-4">
+						<div className="bg-[#ce7428] rounded-t-xl p-4 flex items-center justify-between">
 							<h1 className="text-2xl font-semibold text-white xl:text-4xl">Welcome to Way Fong</h1>
+							<div className="">
+								<TextField
+									select
+									name="country"
+									InputLabelProps={{shrink: true}}
+									SelectProps={{
+										native: false,
+										sx: {textTransform: "capitalize"},
+									}}
+									size="small"
+									value={country}
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										handleChange(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
+									}
+								>
+									{LANG_DATA.map((option, i) => (
+										<MenuItem value={option.value} key={i}>
+											<Box
+												component="img"
+												src={option.flag}
+												alt={option.value}
+												sx={{height: "20px"}}
+											/>
+										</MenuItem>
+									))}
+								</TextField>
+							</div>
 						</div>
 						<div className="p-3">
 							<p>Please enter your details for us to connect with you</p>
