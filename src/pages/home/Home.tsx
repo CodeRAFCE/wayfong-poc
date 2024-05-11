@@ -177,6 +177,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: t("This field is required!")},
+								pattern: {
+									value: /^[a-zA-Z0-9\s]*$/,
+									message: t("Special character are not allowed"),
+								},
 								maxLength: {
 									value: 27,
 									message: "You have reached your limit on the maximum characters",
@@ -197,6 +201,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: t("This field is required!")},
+								pattern: {
+									value: /^[a-zA-Z0-9\s]*$/,
+									message: t("Special character are not allowed"),
+								},
 								maxLength: {
 									value: 27,
 									message: "You have reached your limit on the maximum characters",
@@ -397,6 +405,10 @@ const Home = () => {
 							required
 							rules={{
 								required: {value: true, message: t("This field is required!")},
+								pattern: {
+									value: /^[a-zA-Z0-9\s]*$/,
+									message: t("Special character are not allowed"),
+								},
 								maxLength: {
 									value: 40,
 									message: "You have reached your limit on the maximum characters",
@@ -417,6 +429,10 @@ const Home = () => {
 							name="addressLine2"
 							label={t("Address line 2")}
 							rules={{
+								pattern: {
+									value: /^[a-zA-Z0-9\s]*$/,
+									message: t("Special character are not allowed"),
+								},
 								maxLength: {
 									value: 40,
 									message: "You have reached your limit on the maximum characters",
@@ -746,6 +762,10 @@ const Home = () => {
 													value: true,
 													message: t("This field is required!"),
 												},
+												pattern: {
+													value: /^[a-zA-Z0-9\s]*$/,
+													message: t("Special character are not allowed"),
+												},
 											}}
 											required
 											size="small"
@@ -803,6 +823,10 @@ const Home = () => {
 													required: {
 														value: true,
 														message: t("This field is required!"),
+													},
+													pattern: {
+														value: /^[a-zA-Z0-9\s]*$/,
+														message: t("Special character are not allowed"),
 													},
 												}}
 												size="small"
@@ -1037,6 +1061,10 @@ const Home = () => {
 							required: {
 								value: true,
 								message: t("This field is required!"),
+							},
+							pattern: {
+								value: /^[a-zA-Z0-9\s]*$/,
+								message: t("Special character are not allowed"),
 							},
 							maxLength: {
 								value: 320,
