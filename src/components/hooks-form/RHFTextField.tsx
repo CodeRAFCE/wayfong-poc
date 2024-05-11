@@ -23,9 +23,9 @@ export const TextMaskCustom = forwardRef<HTMLInputElement, CustomProps>(function
 		<IMaskInput
 			{...other}
 			name={name}
-			mask="(000)-000-0000"
+			mask="000-000-0000"
 			definitions={{
-				"#": /[1-9]/,
+				"#": /^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$/,
 			}}
 			ref={ref}
 			onAccept={(value: string) => onChange({target: {name, value}})}

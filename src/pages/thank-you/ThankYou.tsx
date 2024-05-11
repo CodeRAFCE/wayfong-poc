@@ -1,17 +1,17 @@
 import {CircleX} from "lucide-react";
+import {useTranslation} from "react-i18next";
 import {useLocation} from "react-router-dom";
 
 const ThankYou = () => {
 	const {state} = useLocation();
-
-	console.log(state.status);
+	const {t} = useTranslation();
 
 	let message: string;
 
 	if (state.status !== 200) {
-		message = "Uh-oh your form submission has failed, Please try again";
+		message = t("Uh-oh your form submission has failed, Please try again");
 	} else {
-		message = "Our sales associate will get back to you";
+		message = t("Our sales associate will get back to you");
 	}
 
 	return (
@@ -28,7 +28,7 @@ const ThankYou = () => {
 				)}
 			</div>
 			<h1 className="text-3xl font-semibold mb-6">
-				{state.status !== 200 ? "Something went wrong" : "Thank you for your interest!"}
+				{state.status !== 200 ? t("Something went wrong") : t("Thank you for your interest!")}
 			</h1>
 			<p>{message}</p>
 		</div>

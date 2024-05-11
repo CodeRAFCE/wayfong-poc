@@ -35,8 +35,11 @@ import {TimeZones} from "../../shared/enums/time-zones";
 import ProductQuantityUnits from "../../shared/enums/product-quantity-units";
 import CompanyTurnOver from "../../shared/enums/company-turnover";
 import statesUS from "../../components/us.json";
+import {useTranslation} from "react-i18next";
 
 const Home = () => {
+	const {t} = useTranslation();
+
 	const navigate = useNavigate();
 	const methods = useForm<CustomerOnboardingFormData>({
 		mode: "all",
@@ -46,7 +49,7 @@ const Home = () => {
 	const {
 		handleSubmit,
 		control,
-		formState: {isValid, isLoading},
+		formState: {isValid, isLoading, errors},
 		reset,
 		watch,
 		setValue,
@@ -169,11 +172,11 @@ const Home = () => {
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-4">
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
-							name="companyName"
-							label="Company Name"
+							name={"companyName"}
+							label={t("Company Name")}
 							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 								maxLength: {
 									value: 27,
 									message: "You have reached your limit on the maximum characters",
@@ -190,10 +193,10 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="contactName"
-							label="Contact Person"
+							label={t("Contact Person")}
 							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 								maxLength: {
 									value: 27,
 									message: "You have reached your limit on the maximum characters",
@@ -213,10 +216,10 @@ const Home = () => {
 						<RHFSelect
 							fullWidth
 							name="businessType"
-							label="Business Type"
+							label={t("Business Type")}
 							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 							}}
 							InputLabelProps={{shrink: true}}
 							InputProps={{
@@ -259,7 +262,7 @@ const Home = () => {
 										}}
 										checked={values?.businessType?.indexOf(option) > -1}
 									/>
-									<ListItemText primary={option} sx={{p: 0.5}} />
+									<ListItemText primary={t(option)} sx={{p: 0.5}} />
 								</MenuItem>
 							))}
 						</RHFSelect>
@@ -273,13 +276,17 @@ const Home = () => {
 								name="phone"
 								control={control}
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
+									pattern: {
+										value: /^\d{3}-\d{3}-\d{4}$/,
+										message: t("Invalid USA phone number"),
+									},
 								}}
 								render={({field}) => {
 									return (
 										<TextField
 											fullWidth
-											label="Phone Number"
+											label={t("Phone Number")}
 											required
 											InputProps={{
 												inputComponent:
@@ -303,6 +310,8 @@ const Home = () => {
 											}}
 											id="formatted-text-mask-input"
 											size="small"
+											error={!!errors.phone}
+											helperText={!!errors.phone && errors.phone.message}
 											sx={{
 												"& .MuiOutlinedInput-root": {
 													"& .MuiOutlinedInput-notchedOutline": {
@@ -347,13 +356,13 @@ const Home = () => {
 						<RHFTextField
 							name="email"
 							type="email"
-							label="Email Address"
+							label={t("Email Address")}
 							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 								pattern: {
 									value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-									message: "Invalid email address!",
+									message: t("Invalid email address!"),
 								},
 							}}
 							size="small"
@@ -374,7 +383,7 @@ const Home = () => {
 						fontSize: "16px",
 					}}
 				>
-					Shipping Address{" "}
+					{t("Shipping Address")}{" "}
 					<Box component="span" color="red">
 						*
 					</Box>
@@ -384,10 +393,10 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="addressLine1"
-							label="Address Line 1"
+							label={t("Address line 1")}
 							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 								maxLength: {
 									value: 40,
 									message: "You have reached your limit on the maximum characters",
@@ -406,7 +415,7 @@ const Home = () => {
 					<Box sx={{width: "100%"}}>
 						<RHFTextField
 							name="addressLine2"
-							label="Address Line 2"
+							label={t("Address line 2")}
 							rules={{
 								maxLength: {
 									value: 40,
@@ -427,11 +436,11 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="zipCode"
-								label="Zip Code"
+								label={t("Zip Code")}
 								type="number"
 								required
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
 									pattern: {
 										value: /^\d{5}$/,
 										message: "Zip code must be a 5 digit number!",
@@ -457,10 +466,10 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="city"
-								label="City"
+								label={t("City")}
 								required
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
 								}}
 								size="small"
 								InputProps={{
@@ -476,9 +485,10 @@ const Home = () => {
 							<RHFSelect
 								fullWidth
 								name="state"
-								label="State*"
+								label={t("State")}
+								required
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
 								}}
 								InputLabelProps={{shrink: true}}
 								InputProps={{
@@ -512,10 +522,10 @@ const Home = () => {
 						<Box sx={{width: "100%"}}>
 							<RHFTextField
 								name="country"
-								label="Country"
+								label={t("Country")}
 								required
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
 								}}
 								disabled
 								size="small"
@@ -529,7 +539,7 @@ const Home = () => {
 				</div>
 
 				<div className="w-full mb-4">
-					<RHFCheckbox label="Use it as my Billing Address" name="isAlsoBillingAddress" />
+					<RHFCheckbox label={t("Use it as my Billing Address")} name="isAlsoBillingAddress" />
 				</div>
 
 				<div className="w-full mb-4">
@@ -542,10 +552,10 @@ const Home = () => {
 							fontSize: "16px",
 						}}
 					>
-						Payment Information
+						{t("Payment Information")}
 					</Typography>
 					<label htmlFor="" className="font-semibold">
-						Pay Term{" "}
+						{t("Pay Term")}{" "}
 						<Box component="span" color="red">
 							*
 						</Box>
@@ -554,7 +564,7 @@ const Home = () => {
 					{/* TODO: rules is pending */}
 					<RHFRadioGroup
 						rules={{
-							required: {value: true, message: "This field is required!"},
+							required: {value: true, message: t("This field is required!")},
 						}}
 						name="payTerm"
 						options={PAY_TERM}
@@ -563,7 +573,7 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Pay Type{" "}
+						{t("Pay Type")}{" "}
 						<Box component="span" color="red">
 							*
 						</Box>
@@ -571,7 +581,7 @@ const Home = () => {
 					</label>
 					<RHFRadioGroup
 						rules={{
-							required: {value: true, message: "This field is required!"},
+							required: {value: true, message: t("This field is required!")},
 						}}
 						name="payType"
 						options={PAY_TYPE}
@@ -588,16 +598,16 @@ const Home = () => {
 							fontSize: "16px",
 						}}
 					>
-						Company turnover per annum <span className="text-red-600">*</span>
+						{t("Company's Turnover (per annum)")} <span className="text-red-600">*</span>
 					</Typography>
 
 					<Box sx={{width: "100%"}}>
 						<RHFSelect
 							name="turnOverPerAnnum"
-							label="Company's Turnover (per annum)"
+							label={t("Company's Turnover (per annum)")}
 							type="number"
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 							}}
 							size="small"
 							InputProps={{
@@ -642,15 +652,26 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold block mb-4">
-						Interested product category<span className="text-red-400">*</span>
+						<Typography
+							variant="subtitle2"
+							sx={{
+								mb: "14px",
+								color: "#9E4900",
+								fontWeight: "600",
+								fontSize: "16px",
+							}}
+						>
+							{t("Interested product Category")} <span className="text-red-600">*</span>
+						</Typography>
 					</label>
 					<Box sx={{width: "100%"}}>
 						<RHFSelect
 							fullWidth
 							name="interestedProductCategories"
-							label="Interested product categories"
+							label={t("Interested product Category")}
+							required
 							rules={{
-								required: {value: true, message: "This field is required!"},
+								required: {value: true, message: t("This field is required!")},
 							}}
 							InputLabelProps={{shrink: true}}
 							InputProps={{
@@ -702,11 +723,17 @@ const Home = () => {
 
 				<div className="w-full mb-8">
 					<label htmlFor="" className="font-semibold">
-						Preferred Products{" "}
-						<Box component="span" color="red">
-							*
-						</Box>
-						:
+						<Typography
+							variant="subtitle2"
+							sx={{
+								mb: "14px",
+								color: "#9E4900",
+								fontWeight: "600",
+								fontSize: "16px",
+							}}
+						>
+							{t("Preferred Products")} <span className="text-red-600">*</span>
+						</Typography>
 					</label>
 					<Box>
 						{fields.map((field, index) => {
@@ -717,7 +744,7 @@ const Home = () => {
 											rules={{
 												required: {
 													value: true,
-													message: "This field is required!",
+													message: t("This field is required!"),
 												},
 											}}
 											required
@@ -726,7 +753,7 @@ const Home = () => {
 											InputProps={{
 												className: "bg-[#FDF0E1]",
 											}}
-											label="Preferred Products"
+											label={t("Preferred Product")}
 											inputProps={{maxLength: 30}}
 										/>
 									</div>
@@ -736,12 +763,12 @@ const Home = () => {
 											<RHFSelect
 												fullWidth
 												name={`products.${index}.orderFrequency`}
-												label="Order Frequency"
+												label={t("Order Frequency")}
 												required
 												rules={{
 													required: {
 														value: true,
-														message: "This field is required!",
+														message: t("This field is required!"),
 													},
 												}}
 												InputLabelProps={{shrink: true}}
@@ -775,7 +802,7 @@ const Home = () => {
 												rules={{
 													required: {
 														value: true,
-														message: "This field is required!",
+														message: t("This field is required!"),
 													},
 												}}
 												size="small"
@@ -783,7 +810,7 @@ const Home = () => {
 												InputProps={{
 													className: "bg-[#FDF0E1]",
 												}}
-												label="Quantity"
+												label={t("Quantity")}
 												type="number"
 												required
 												onInput={(e) =>
@@ -800,11 +827,11 @@ const Home = () => {
 											<RHFSelect
 												fullWidth
 												name={`products.${index}.quantityUnit`}
-												label="Quantity Unit"
+												label={t("Quantity Unit")}
 												rules={{
 													required: {
 														value: true,
-														message: "This field is required!",
+														message: t("This field is required!"),
 													},
 												}}
 												InputLabelProps={{shrink: true}}
@@ -886,7 +913,7 @@ const Home = () => {
 						>
 							<Plus className="text-white" />
 						</IconButton>{" "}
-						<span>Add Product</span>
+						<span>{t("Add Product")}</span>
 					</div>
 				</div>
 
@@ -894,11 +921,12 @@ const Home = () => {
 					<RHFSelect
 						fullWidth
 						name={`deliveryOption`}
-						label="Delivery Options*"
+						label={t("Delivery Options")}
+						required
 						rules={{
 							required: {
 								value: true,
-								message: "This field is required!",
+								message: t("This field is required!"),
 							},
 						}}
 						InputLabelProps={{shrink: true}}
@@ -930,9 +958,9 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Preferred time to contact{" "}
+						{t("Preferred time to contact")}{" "}
 						<Box component="span" color="red">
-							*
+							**
 						</Box>
 					</label>
 					<div className="w-1/2 my-4">
@@ -940,9 +968,10 @@ const Home = () => {
 							<RHFSelect
 								fullWidth
 								name="preferredTimeZone"
-								label="Preferred Time Zone*"
+								label={t("Preferred Time Zone")}
+								required
 								rules={{
-									required: {value: true, message: "This field is required!"},
+									required: {value: true, message: t("This field is required!")},
 								}}
 								InputLabelProps={{shrink: true}}
 								InputProps={{
@@ -977,7 +1006,7 @@ const Home = () => {
 							rules={{
 								required: {
 									value: true,
-									message: "This field is required!",
+									message: t("This field is required!"),
 								},
 								// validate: (options: string[]) => {
 								// 	if (options && options.length < 3) {
@@ -993,26 +1022,13 @@ const Home = () => {
 						/>
 					</div>
 
-					<FormHelperText>**Select at least 2 slots</FormHelperText>
+					<FormHelperText>{t("**Select at least 2 slots")}</FormHelperText>
 				</div>
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						Comment
+						{t("Comment")}
 					</label>
-
-					{/* <RHFTextField
-						name="comment"
-						multiline
-						rows={4}
-						rules={{
-							required: {value: true, message: "This field is required!"},
-						}}
-						size="small"
-						InputProps={{
-							className: "bg-[#FDF0E1]",
-						}}
-					/> */}
 
 					<Controller
 						name={"comment"}
@@ -1020,7 +1036,7 @@ const Home = () => {
 						rules={{
 							required: {
 								value: true,
-								message: "This is field is required!",
+								message: t("This field is required!"),
 							},
 							maxLength: {
 								value: 320,
@@ -1099,7 +1115,7 @@ const Home = () => {
 						}}
 						disabled={!isValid || values.preferredTimeSlots.length < 2 || isLoading}
 					>
-						Submit
+						{t("Submit")}
 					</Button>
 				</div>
 			</form>

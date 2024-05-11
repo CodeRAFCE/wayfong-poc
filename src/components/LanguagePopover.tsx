@@ -7,14 +7,20 @@ import {useTranslation} from "react-i18next";
 
 interface ILanguagePopover {}
 
+const obj = localStorage.getItem("i18nextLng");
+
+const parseObj: TLanguage = JSON.parse(obj as string);
+
 const LanguagePopover = ({}: ILanguagePopover) => {
 	const [open, setOpen] = useState(null);
 	const {i18n} = useTranslation();
-	const [currentLang, setCurrentLang] = useState<TLanguage>(LANGS[0]);
+	const [currentLang, setCurrentLang] = useState<TLanguage>(parseObj || LANGS[0]);
 
-	const handleChangeLanguage = (newlang: TLanguage) => {
-		i18n.changeLanguage(newlang.value);
-		setCurrentLang(newlang);
+	const handleChangeLanguage = (newLang: TLanguage) => {
+		i18n.changeLanguage(newLang.value);
+		setCurrentLang(newLang);
+
+		localStorage.setItem("i18nextLng", JSON.stringify(newLang));
 	};
 
 	// TODO: Remove any
