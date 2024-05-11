@@ -181,9 +181,9 @@ const Home = () => {
 									value: /^[a-zA-Z\s]*$/,
 									message: t("Please enter only letters and spaces."),
 								},
-								maxLength: {
-									value: 27,
-									message: "You have reached your limit on the maximum characters",
+								minLength: {
+									value: 6,
+									message: "minimum character should at least be 6",
 								},
 							}}
 							size="small"
@@ -205,9 +205,9 @@ const Home = () => {
 									value: /^[a-zA-Z\s]*$/,
 									message: t("Please enter only letters and spaces."),
 								},
-								maxLength: {
-									value: 27,
-									message: "You have reached your limit on the maximum characters",
+								minLength: {
+									value: 6,
+									message: "minimum character should at least be 6",
 								},
 							}}
 							size="small"
@@ -1073,9 +1073,9 @@ const Home = () => {
 								value: /^[a-zA-Z\s]*$/,
 								message: t("Please enter only letters and spaces."),
 							},
-							maxLength: {
-								value: 320,
-								message: "You have reached your limit on the maximum characters",
+							minLength: {
+								value: 10,
+								message: "minimum character should at least be 10",
 							},
 						}}
 						render={({field, fieldState: {error}}) => (
