@@ -352,7 +352,7 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: "This field is required!"},
 								pattern: {
-									value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]{3,}+\.[a-zA-Z]{2,}$/,
+									value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 									message: "Invalid email address!",
 								},
 							}}

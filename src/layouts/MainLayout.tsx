@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Link, Outlet} from "react-router-dom";
+import {Outlet} from "react-router-dom";
 
 import Providers from "../components/Providers";
 import {Box, CssBaseline, MenuItem, TextField} from "@mui/material";
@@ -7,6 +7,7 @@ import {Box, CssBaseline, MenuItem, TextField} from "@mui/material";
 import logo from "/logo.webp";
 import English from "/usa.svg";
 import China from "/china.svg";
+import {useTranslation} from "react-i18next";
 
 const LANG_DATA = [
 	{value: "en", flag: English},
@@ -14,11 +15,14 @@ const LANG_DATA = [
 ];
 
 const MainLayout = () => {
-	const [country, setCountry] = useState(English);
+	const {i18n, t} = useTranslation();
+	const [country, setCountry] = useState<{value: string; flag: string}>(LANG_DATA[0]);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		setCountry(event.target.value);
+	const handleLangChange = (newLang: string) => {
+		console.log(newLang);
+		i18n.changeLanguage(newLang);
 	};
+
 	return (
 		<Providers>
 			<CssBaseline />
@@ -26,18 +30,12 @@ const MainLayout = () => {
 				{/* <Header /> */}
 				<div className="bg-[#80ca7b] items-center flex justify-between mb-4 h-20 px-7">
 					<img src={logo} className="py-2" />
-
-					<div className="flex items-center gap-8">
-						<Link to="/" className="font-semibold capitalize text-white">
-							Home
-						</Link>
-					</div>
 				</div>
 
 				<div className="px-4 w-full mx-auto">
 					<div className="border border-[#ce7428] rounded-t-xl ">
 						<div className="bg-[#ce7428] rounded-t-xl p-4 flex items-center justify-between">
-							<h1 className="text-2xl font-semibold text-white xl:text-4xl">Welcome to Way Fong</h1>
+							<h1 className="text-2xl font-semibold text-white xl:text-4xl">{t("welcome")}</h1>
 							<div className="">
 								<TextField
 									select
@@ -48,13 +46,22 @@ const MainLayout = () => {
 										sx: {textTransform: "capitalize"},
 									}}
 									size="small"
-									value={country}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-										handleChange(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
-									}
+									value={country.value}
+									defaultValue={country}
+									onChange={(event) => {
+										const result = LANG_DATA.find((obj) => {
+											return obj?.value === event.target.value;
+										});
+										setCountry(result as {value: string; flag: string});
+										handleLangChange(event.target.value);
+									}}
 								>
 									{LANG_DATA.map((option, i) => (
-										<MenuItem value={option.value} key={i}>
+										<MenuItem
+											value={option.value}
+											key={i}
+											selected={option.value === country.value}
+										>
 											<Box
 												component="img"
 												src={option.flag}
@@ -67,7 +74,7 @@ const MainLayout = () => {
 							</div>
 						</div>
 						<div className="p-3">
-							<p>Please enter your details for us to connect with you</p>
+							<p>{t("greeting")}</p>
 							<a
 								href="https://wayfong.com"
 								target="_blank"
