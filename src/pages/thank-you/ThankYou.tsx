@@ -9,9 +9,9 @@ const ThankYou = () => {
 	let message: string;
 
 	if (state.status !== 200) {
-		message = t("Uh-oh your form submission has failed, Please try again");
+		message = t("Uh-oh your form submission has failed, Please try again.");
 	} else {
-		message = t("Our sales associate will get back to you");
+		message = t("Our sales associate will get back to you.");
 	}
 
 	return (
