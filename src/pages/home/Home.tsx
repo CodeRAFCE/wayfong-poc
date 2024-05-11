@@ -178,8 +178,8 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: t("This field is required!")},
 								pattern: {
-									value: /^[a-zA-Z0-9\s]*$/,
-									message: t("Special character are not allowed"),
+									value: /^[a-zA-Z\s]*$/,
+									message: t("Please enter only letters and spaces."),
 								},
 								maxLength: {
 									value: 27,
@@ -202,8 +202,8 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: t("This field is required!")},
 								pattern: {
-									value: /^[a-zA-Z0-9\s]*$/,
-									message: t("Special character are not allowed"),
+									value: /^[a-zA-Z\s]*$/,
+									message: t("Please enter only letters and spaces."),
 								},
 								maxLength: {
 									value: 27,
@@ -406,8 +406,8 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: t("This field is required!")},
 								pattern: {
-									value: /^[a-zA-Z0-9\s]*$/,
-									message: t("Special character are not allowed"),
+									value: /^[a-zA-Z\s]*$/,
+									message: t("Please enter only letters and spaces."),
 								},
 								maxLength: {
 									value: 40,
@@ -430,8 +430,8 @@ const Home = () => {
 							label={t("Address line 2")}
 							rules={{
 								pattern: {
-									value: /^[a-zA-Z0-9\s]*$/,
-									message: t("Special character are not allowed"),
+									value: /^[a-zA-Z\s]*$/,
+									message: t("Please enter only letters and spaces."),
 								},
 								maxLength: {
 									value: 40,
@@ -763,8 +763,8 @@ const Home = () => {
 													message: t("This field is required!"),
 												},
 												pattern: {
-													value: /^[a-zA-Z0-9\s]*$/,
-													message: t("Special character are not allowed"),
+													value: /^[a-zA-Z\s]*$/,
+													message: t("Please enter only letters and spaces."),
 												},
 											}}
 											required
@@ -825,8 +825,8 @@ const Home = () => {
 														message: t("This field is required!"),
 													},
 													pattern: {
-														value: /^[a-zA-Z0-9\s]*$/,
-														message: t("Special character are not allowed"),
+														value: /^[a-zA-Z\s]*$/,
+														message: t("Please enter only letters and spaces."),
 													},
 												}}
 												size="small"
@@ -982,10 +982,17 @@ const Home = () => {
 
 				<div className="w-full mb-4">
 					<label htmlFor="" className="font-semibold">
-						{t("Preferred time to contact")}{" "}
-						<Box component="span" color="red">
-							**
-						</Box>
+						<Typography
+							variant="subtitle2"
+							sx={{
+								mb: "14px",
+								color: "#9E4900",
+								fontWeight: "600",
+								fontSize: "16px",
+							}}
+						>
+							{t("Preferred time to contact")} <span className="text-red-600">**</span>
+						</Typography>
 					</label>
 					<div className="w-1/2 my-4">
 						<Box sx={{width: "100%"}}>
@@ -1063,8 +1070,8 @@ const Home = () => {
 								message: t("This field is required!"),
 							},
 							pattern: {
-								value: /^[a-zA-Z0-9\s]*$/,
-								message: t("Special character are not allowed"),
+								value: /^[a-zA-Z\s]*$/,
+								message: t("Please enter only letters and spaces."),
 							},
 							maxLength: {
 								value: 320,
