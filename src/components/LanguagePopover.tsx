@@ -1,7 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useState} from "react";
-import {Box, IconButton, MenuItem, Popover, Stack} from "@mui/material";
+import {Box, MenuItem, Popover, Stack} from "@mui/material";
+import {ArrowDropDown, ArrowDropUp} from "@mui/icons-material";
 import {LANGS, TLanguage} from "../types/lang.type";
 import {useTranslation} from "react-i18next";
 
@@ -33,15 +34,19 @@ const LanguagePopover = ({}: ILanguagePopover) => {
 	};
 	return (
 		<>
-			<IconButton
+			<Box
 				onClick={handleOpen}
 				sx={{
 					width: 40,
 					height: 40,
+					display: "flex",
+					alignItems: "center",
+					mr: 4,
 				}}
 			>
 				<Box component="img" src={currentLang.icon} alt={currentLang.label} />
-			</IconButton>
+				{!open ? <ArrowDropDown /> : <ArrowDropUp />}
+			</Box>
 
 			<Popover
 				open={Boolean(open)}

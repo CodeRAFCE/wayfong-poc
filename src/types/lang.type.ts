@@ -11,7 +11,7 @@ export const LANGS: TLanguage[] = [
 		icon: "/flags/usa.svg",
 	},
 	{
-		label: "China",
+		label: "Chinese",
 		value: "zh",
 		icon: "/flags/china.svg",
 	},

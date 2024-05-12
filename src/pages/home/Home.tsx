@@ -1,4 +1,4 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {
 	Box,
@@ -63,28 +63,6 @@ const Home = () => {
 		name: "products",
 		control,
 	});
-
-	// useEffect(() => {
-	// 	const zipCodeAutoPopulate = async () => {
-	// 		const response = await fetch("");
-
-	// 		if (!response.ok) {
-	// 			throw new Error("Something went wrong");
-	// 		}
-	// 		const data = await response.json();
-
-	// 		if (!data.zipCode) {
-	// 			setError("zipCode", {message: "Uh-oh the provided zip code does not exist in USA"});
-	// 			setError("city", {message: "Uh-oh the provided zip code does not exist in USA"});
-	// 			setError("state", {message: "Uh-oh the provided zip code does not exist in USA"});
-	// 		} else {
-	// 			setValue("city", data?.city);
-	// 			setValue("state", data?.state);
-	// 		}
-	// 	};
-
-	// 	zipCodeAutoPopulate();
-	// }, [setError, setValue]);
 
 	const handleBusinessTypeChange = (event: SelectChangeEvent<typeof values.businessType>) => {
 		const {
@@ -406,8 +384,8 @@ const Home = () => {
 							rules={{
 								required: {value: true, message: t("This field is required!")},
 								pattern: {
-									value: /^[a-zA-Z\s]*$/,
-									message: t("Please enter only letters and spaces."),
+									value: /^[a-zA-Z0-9,#\\/\s]+$/,
+									message: t("Only letters, spaces, comma and ash are allowed."),
 								},
 								maxLength: {
 									value: 40,
@@ -430,8 +408,8 @@ const Home = () => {
 							label={t("Address line 2")}
 							rules={{
 								pattern: {
-									value: /^[a-zA-Z\s]*$/,
-									message: t("Please enter only letters and spaces."),
+									value: /^[a-zA-Z0-9,#\\/\s]+$/,
+									message: t("Only letters, spaces, comma and ash are allowed."),
 								},
 								maxLength: {
 									value: 40,
