@@ -385,7 +385,7 @@ const Home = () => {
 								required: {value: true, message: t("This field is required!")},
 								pattern: {
 									value: /^[a-zA-Z0-9,#\\/\s]+$/,
-									message: t("Only letters, spaces, comma and ash are allowed."),
+									message: t("Only numbers, letters, spaces, comma, slash and ash are allowed."),
 								},
 								maxLength: {
 									value: 40,
@@ -409,7 +409,7 @@ const Home = () => {
 							rules={{
 								pattern: {
 									value: /^[a-zA-Z0-9,#\\/\s]+$/,
-									message: t("Only letters, spaces, comma and ash are allowed."),
+									message: t("Only numbers, letters, spaces, comma, slash and ash are allowed."),
 								},
 								maxLength: {
 									value: 40,
@@ -606,15 +606,6 @@ const Home = () => {
 							size="small"
 							InputProps={{
 								className: "bg-[#FDF0E1]",
-								startAdornment: (
-									<InputAdornment position="start">
-										<div>
-											<Typography variant="body1" sx={{color: "black"}}>
-												$
-											</Typography>
-										</div>
-									</InputAdornment>
-								),
 								size: "small",
 							}}
 							SelectProps={{
