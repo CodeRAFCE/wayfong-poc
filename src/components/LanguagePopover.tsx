@@ -42,6 +42,7 @@ const LanguagePopover = ({}: ILanguagePopover) => {
 					display: "flex",
 					alignItems: "center",
 					mr: 4,
+					cursor: "pointer",
 				}}
 			>
 				<Box component="img" src={currentLang.icon} alt={currentLang.label} />
